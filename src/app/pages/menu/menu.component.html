@@ -11,22 +11,26 @@
 
     <div class="collapse navbar-collapse" id="menuPrincipal">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/']">
+          <a class="nav-link" ><i class="bi bi-pencil-square me-1"></i> Home</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/cadastro']">
           <a class="nav-link" ><i class="bi bi-pencil-square me-1"></i> Cadastrar</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/consulta']">
           <a class="nav-link" ><i class="bi bi-search me-1"></i> Consultar</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/listar-ativos']">
           <a class="nav-link"><i class="bi bi-check-circle me-1"></i> Ativos</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/listar-inativos']">
           <a class="nav-link"><i class="bi bi-x-circle me-1"></i> Inativos</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/listar-pendentes']">
           <a class="nav-link" ><i class="bi bi-clock me-1"></i> Pendentes</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+<router-outlet></router-outlet>
