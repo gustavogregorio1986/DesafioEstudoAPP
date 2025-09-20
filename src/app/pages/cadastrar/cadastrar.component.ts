@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AgendaService } from '../../servicos/agenda.service';
 import { Agenda } from '../../classes/agenda';
 import { Situacao } from '../../classes/Situacao';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { FooterComponent } from '../footer/footer.component';
 import { CommonModule } from '@angular/common';
 
@@ -32,7 +32,7 @@ export class CadastrarComponent {
 
    constructor(private agendaService: AgendaService){}
 
-   salvar() {
+   salvar(form: NgForm) {
      if (!this.titulo || !this.dataInicio || !this.dataFim || !this.descricao || !this.enumSituacao) {
        this.erro = true;
        this.sucesso = false;
@@ -52,6 +52,7 @@ export class CadastrarComponent {
         this.sucesso = true;
         this.erro = false;
         this.limparFormulario();
+        form.resetForm();
       },
       error: err => {
         console.error('Erro ao cadastrar:', err);
@@ -66,6 +67,6 @@ export class CadastrarComponent {
        this.dataInicio = undefined!;
        this.dataFim = undefined!;
        this.descricao = '';
-       this.enumSituacao = Situacao.Pendente;
+       this.enumSituacao = null;
    }
 }
