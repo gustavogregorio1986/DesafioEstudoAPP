@@ -1,3 +1,5 @@
+import { Situacao } from "./Situacao";
+
 export class Agenda {
     Titulo:string;
     DataInicio:Date;

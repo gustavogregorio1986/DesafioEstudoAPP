@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Agenda } from '../classes/agenda';
 import { Observable } from 'rxjs';
 
@@ -7,14 +7,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AgendaService {
-
   private apiUrl = 'https://localhost:7165/api/Agenda';
 
-  constructor(private http: HttpClient) { }
-
-  cadastrar(agenda: Agenda): Observable<Agenda> {
-    return this.http.post<Agenda>(this.apiUrl, agenda);
-  }
+  constructor(private http: HttpClient) {}
 
   adicionarAgenda(agenda: Agenda): Observable<Agenda> {
     return this.http.post<Agenda>(`${this.apiUrl}/AdicionarAgenda`, agenda);

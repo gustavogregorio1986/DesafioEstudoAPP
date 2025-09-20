@@ -1,11 +1,71 @@
 import { Component } from '@angular/core';
+import { AgendaService } from '../../servicos/agenda.service';
+import { Agenda } from '../../classes/agenda';
+import { Situacao } from '../../classes/Situacao';
+import { FormsModule } from '@angular/forms';
+import { FooterComponent } from '../footer/footer.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cadastrar',
-  imports: [],
+  standalone: true,
+  imports: [FormsModule, CommonModule, FooterComponent],
   templateUrl: './cadastrar.component.html',
   styleUrl: './cadastrar.component.css'
 })
 export class CadastrarComponent {
 
+   titulo = '';
+   dataInicio !: Date;
+   dataFim !: Date;
+   descricao = '';
+   enumSituacao: Situacao | null = null;
+
+   sucesso = false;
+   erro = false;
+
+   situacoes: { label: string; value: Situacao }[] = [
+    { label: 'Ativo', value: Situacao.Ativo },
+    { label: 'Inativo', value: Situacao.Inativo },
+    { label: 'Pendente', value: Situacao.Pendente }
+  ];
+
+   constructor(private agendaService: AgendaService){}
+
+   salvar() {
+     if (!this.titulo || !this.dataInicio || !this.dataFim || !this.descricao || !this.enumSituacao) {
+       this.erro = true;
+       this.sucesso = false;
+       return;
+     }
+
+     const novaAgenda = new Agenda(
+      this.titulo,
+      this.dataInicio,
+      this.dataFim,
+      this.descricao,
+      this.enumSituacao
+    );
+
+     this.agendaService.adicionarAgenda(novaAgenda).subscribe({
+      next: res => {
+        this.sucesso = true;
+        this.erro = false;
+        this.limparFormulario();
+      },
+      error: err => {
+        console.error('Erro ao cadastrar:', err);
+        this.erro = true;
+        this.sucesso = false;
+      }
+    });
+   }
+
+   limparFormulario(){
+       this.titulo = '';
+       this.dataInicio = undefined!;
+       this.dataFim = undefined!;
+       this.descricao = '';
+       this.enumSituacao = Situacao.Pendente;
+   }
 }
