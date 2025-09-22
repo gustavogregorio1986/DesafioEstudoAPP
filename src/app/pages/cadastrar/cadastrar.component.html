@@ -15,7 +15,7 @@
     </div>
 
     <input [(ngModel)]="horaInicio" name="horaInicio" type="time" required class="form-control mb-2"
-       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['horaInicio']?.invalid}">
+       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['horaInicio'].invalid}">
     <div *ngIf="formAgenda.submitted && formAgenda.controls['horaInicio'].invalid" class="text-danger">
        Hora de início é obrigatória.
     </div>
@@ -27,7 +27,7 @@
     </div>
 
     <input [(ngModel)]="horaFim" name="horaFim" type="time" required class="form-control mb-2"
-       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['horaFim']?.invalid}">
+       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['horaFim'].invalid}">
     <div *ngIf="formAgenda.submitted && formAgenda.controls['horaFim'].invalid" class="text-danger">
       Hora de fim é obrigatória.
     </div>
