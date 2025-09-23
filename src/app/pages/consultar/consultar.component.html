@@ -18,10 +18,10 @@
       <tr *ngFor="let agenda of grupo.value">
         <td>{{ agenda.titulo }}</td>
         <td>{{ agenda.descricao }}</td>
-       <td>{{ agenda.dataInicio && (agenda.dataInicio | date:'short') }}</td>
-       <td *ngIf="agenda.dataFim">{{ agenda.dataFim | date:'short' }}</td>
-       <td *ngIf="!agenda.dataFim">—</td>
-        <td>{{ agenda.enumSituacao }}</td> <!-- ou use um tradutor -->
+        <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+        <td *ngIf="!agenda.dataFim">—</td>
+        <td>{{ getSituacaoLabel(agenda.enumSituacao) }}</td>
       </tr>
     </tbody>
   </table>

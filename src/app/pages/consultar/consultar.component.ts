@@ -30,6 +30,10 @@ export class ConsultarComponent implements OnInit {
      this.carregarAgendas();
    }
 
+   getSituacaoLabel(valor: number): string {
+     return Situacao[valor] ?? 'Desconhecida';
+   }
+
    carregarAgendas(): void {
     this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
      agendas.forEach(agenda => {
