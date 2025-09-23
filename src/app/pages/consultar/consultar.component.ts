@@ -1,11 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Agenda } from '../../classes/agenda';
+import { AgendaService } from '../../servicos/agenda.service';
+import { FooterComponent } from '../footer/footer.component';
+import { DatePipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
+import { Situacao } from '../../classes/Situacao';
 
 @Component({
   selector: 'app-consultar',
-  imports: [],
+  imports: [FooterComponent,  DatePipe,      // ✅ necessário para | date:'short'
+    KeyValuePipe,  // ✅ se estiver usando | keyvalue
+    NgFor,         // ✅ para *ngFor
+    NgIf           // ✅ se estiver usando *ngIf
+  ],
   templateUrl: './consultar.component.html',
   styleUrl: './consultar.component.css'
 })
-export class ConsultarComponent {
+export class ConsultarComponent implements OnInit {
 
+   agendasPorAno: { [ano: string]: Agenda[] } = {};
+
+   enumSituacao: Situacao = Situacao.Pendente; // exemplo de valor inicial
+
+
+   constructor(private agendaService: AgendaService){
+
+   }
+
+   ngOnInit(): void {
+     this.carregarAgendas();
+   }
+
+   carregarAgendas(): void {
+    this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
+     agendas.forEach(agenda => {
+       agenda.Ano = new Date(agenda.dataInicio).getFullYear().toString();
+    });
+
+   const agrupado: { [ano: string]: Agenda[] } = {};
+
+   agendas.forEach(agenda => {
+     const ano = agenda.Ano!;
+     if (!agrupado[ano]) agrupado[ano] = [];
+      agrupado[ano].push(agenda);
+   });
+
+    this.agendasPorAno = Object.fromEntries(
+      Object.entries(agrupado).sort((a, b) => +b[0] - +a[0])
+    );
+   });
+  }
 }

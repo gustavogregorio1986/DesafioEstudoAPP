@@ -1,17 +1,18 @@
 import { Situacao } from "./Situacao";
 
 export class Agenda {
-    Titulo:string;
-    DataInicio:Date;
-    DataFim:Date;
-    Descricao:string
+    titulo:string;
+    dataInicio:Date;
+    dataFim:Date;
+    descricao:string
     enumSituacao:Situacao;
+    Ano?: string;       // ✅ nova propriedade opcional
 
     constructor(titulo: string, dataInicio: Date, dataFim:Date, descricao:string, enumSituacao:Situacao){
-        this.Titulo = titulo;
-        this.DataInicio = dataInicio;
-        this.DataFim = dataFim;
-        this.Descricao = descricao;
+        this.titulo = titulo;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.descricao = descricao;
         this.enumSituacao = enumSituacao;
     }
 }
