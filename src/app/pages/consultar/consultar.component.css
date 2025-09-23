@@ -3,3 +3,15 @@
   background-color: #343a40;
   color: white;
 }
+
+.situacao-ativo {
+  color: green;
+}
+
+.situacao-inativo {
+  color: red;
+}
+
+.situacao-pendente {
+  color: blue;
+}

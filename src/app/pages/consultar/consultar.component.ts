@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Agenda } from '../../classes/agenda';
 import { AgendaService } from '../../servicos/agenda.service';
 import { FooterComponent } from '../footer/footer.component';
-import { DatePipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
+import { CommonModule, DatePipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
 import { Situacao } from '../../classes/Situacao';
 
 @Component({
   selector: 'app-consultar',
-  imports: [FooterComponent,  DatePipe,      // ✅ necessário para | date:'short'
+  imports: [CommonModule, FooterComponent,  DatePipe,      // ✅ necessário para | date:'short'
     KeyValuePipe,  // ✅ se estiver usando | keyvalue
     NgFor,         // ✅ para *ngFor
     NgIf           // ✅ se estiver usando *ngIf
@@ -30,14 +30,28 @@ export class ConsultarComponent implements OnInit {
      this.carregarAgendas();
    }
 
-   getSituacaoLabel(valor: number): string {
-     return Situacao[valor] ?? 'Desconhecida';
-   }
+  getSituacaoLabel(valor: number): string {
+    return Situacao[valor] ?? 'Desconhecida';
+  }
+
+   getClassePorEnum(valor: number): string {
+  const label = Situacao[valor];
+  switch (label) {
+    case 'ATIVO':
+      return 'text-success';
+    case 'INATIVO':
+      return 'text-danger';
+    case 'PENDENTE':
+      return 'text-primary';
+    default:
+      return '';
+  }
+ }
 
    carregarAgendas(): void {
     this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
      agendas.forEach(agenda => {
-       agenda.Ano = new Date(agenda.dataInicio).getFullYear().toString();
+       agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();
     });
 
    const agrupado: { [ano: string]: Agenda[] } = {};

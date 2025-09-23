@@ -21,7 +21,9 @@
         <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
         <td *ngIf="!agenda.dataFim">—</td>
-        <td>{{ getSituacaoLabel(agenda.enumSituacao) }}</td>
+        <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+         {{ getSituacaoLabel(agenda.enumSituacao) }}
+        </td>
       </tr>
     </tbody>
   </table>
