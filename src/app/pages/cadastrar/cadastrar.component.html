@@ -8,7 +8,7 @@
       Título é obrigatório.
     </div>
 
-    <input [(ngModel)]="dataInicio" name="dataInicio" type="date" required class="form-control mb-2"
+    <input [(ngModel)]="dataInicio" name="dataInicio" type="date" required  class="form-control mb-2"
        [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['dataInicio'].invalid}">
     <div *ngIf="formAgenda.submitted && formAgenda.controls['dataInicio'].invalid" class="text-danger">
       Data de início é obrigatória.

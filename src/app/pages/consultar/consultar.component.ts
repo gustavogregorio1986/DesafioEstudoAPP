@@ -34,19 +34,20 @@ export class ConsultarComponent implements OnInit {
     return Situacao[valor] ?? 'Desconhecida';
   }
 
-   getClassePorEnum(valor: number): string {
+  getClassePorEnum(valor: number): string {
   const label = Situacao[valor];
+  console.log('Valor:', valor, 'Label:', label);
   switch (label) {
-    case 'ATIVO':
+    case 'Ativo':
       return 'text-success';
-    case 'INATIVO':
+    case 'Inativo':
       return 'text-danger';
-    case 'PENDENTE':
+    case 'Pendente':
       return 'text-primary';
     default:
       return '';
+   }
   }
- }
 
    carregarAgendas(): void {
     this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
