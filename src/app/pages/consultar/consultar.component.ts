@@ -51,7 +51,6 @@ export class ConsultarComponent implements OnInit {
 
   getClassePorEnum(valor: number): string {
   const label = Situacao[valor];
-  console.log('Valor:', valor, 'Label:', label);
   switch (label) {
     case 'Ativo':
       return 'text-success';
@@ -99,8 +98,6 @@ export class ConsultarComponent implements OnInit {
       0
     );
 
-    // Teste: ver no console
-    console.log('Total registros:', this.totalRegistros);
   });
  }
 }
