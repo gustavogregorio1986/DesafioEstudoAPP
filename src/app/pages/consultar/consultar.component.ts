@@ -20,6 +20,9 @@ export class ConsultarComponent implements OnInit {
    agendasPorAno: { [ano: string]: Agenda[] } = {};
    linhasVisiveis: number = 0;
 
+   grupos: { key: string; value: Agenda[] }[] = [];
+   totalRegistros: number = 0;
+
    enumSituacao: Situacao = Situacao.Pendente; // exemplo de valor inicial
 
 
@@ -29,8 +32,7 @@ export class ConsultarComponent implements OnInit {
 
    ngOnInit(): void {
      this.carregarAgendas();
-     this.linhasVisiveis = Object.values(this.agendasPorAno)
-    .reduce((total, lista) => total + lista.length, 0);
+     
    }
 
    getAnos(): string[] {
@@ -63,22 +65,42 @@ export class ConsultarComponent implements OnInit {
   }
 
    carregarAgendas(): void {
-    this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
-     agendas.forEach(agenda => {
-       agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();
+  this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
+    // Adiciona o ano a cada agenda
+    agendas.forEach(agenda => {
+      agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();
     });
 
-   const agrupado: { [ano: string]: Agenda[] } = {};
-
-   agendas.forEach(agenda => {
-     const ano = agenda.Ano!;
-     if (!agrupado[ano]) agrupado[ano] = [];
+    // Agrupa por ano
+    const agrupado: { [ano: string]: Agenda[] } = {};
+    agendas.forEach(agenda => {
+      const ano = agenda.Ano!;
+      if (!agrupado[ano]) agrupado[ano] = [];
       agrupado[ano].push(agenda);
-   });
+    });
 
+    // Ordena e salva
     this.agendasPorAno = Object.fromEntries(
       Object.entries(agrupado).sort((a, b) => +b[0] - +a[0])
     );
-   });
-  }
+
+    // Agora sim: cria os grupos
+    this.grupos = Object.entries(this.agendasPorAno).map(([ano, lista]) => ({
+      key: ano,
+      value: lista
+    }));
+
+    // Calcula os totais com os dados prontos
+    this.linhasVisiveis = Object.values(this.agendasPorAno)
+      .reduce((total, lista) => total + lista.length, 0);
+
+    this.totalRegistros = this.grupos.reduce(
+      (soma, grupo) => soma + grupo.value.length,
+      0
+    );
+
+    // Teste: ver no console
+    console.log('Total registros:', this.totalRegistros);
+  });
+ }
 }

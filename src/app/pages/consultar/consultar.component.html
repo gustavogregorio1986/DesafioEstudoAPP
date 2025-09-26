@@ -1,4 +1,17 @@
 <div class="container">
+ <p class="fw-bold text-primary mb-3">
+  Total geral de registros: {{ totalRegistros }}
+</p>
+ <div class="row">
+  <div class="col-md-4" *ngFor="let grupo of grupos">
+    <div class="card text-center mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ grupo.key }}</h5>
+        <p class="card-text">{{ grupo.value.length }} registros</p>
+      </div>
+    </div>
+  </div>
+</div>
  <div class="row justify-content-center">
  <div class="col-md-10">
   <div *ngFor="let grupo of agendasPorAno | keyvalue">
