@@ -18,6 +18,7 @@ import { Situacao } from '../../classes/Situacao';
 export class ConsultarComponent implements OnInit {
 
    agendasPorAno: { [ano: string]: Agenda[] } = {};
+   linhasVisiveis: number = 0;
 
    enumSituacao: Situacao = Situacao.Pendente; // exemplo de valor inicial
 
@@ -28,7 +29,19 @@ export class ConsultarComponent implements OnInit {
 
    ngOnInit(): void {
      this.carregarAgendas();
+     this.linhasVisiveis = Object.values(this.agendasPorAno)
+    .reduce((total, lista) => total + lista.length, 0);
    }
+
+   getAnos(): string[] {
+      return Object.keys(this.agendasPorAno);
+   }
+
+   getLinhasPorAno(ano: string): number {
+    return this.agendasPorAno[ano]?.length ?? 0;
+   }
+
+
 
   getSituacaoLabel(valor: number): string {
     return Situacao[valor] ?? 'Desconhecida';

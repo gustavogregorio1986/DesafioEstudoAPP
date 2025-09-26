@@ -3,7 +3,7 @@
  <div class="col-md-10">
   <div *ngFor="let grupo of agendasPorAno | keyvalue">
    <h4 class="mt-4">Ano: {{ grupo.key }}</h4>
-
+    <h4>{{ grupo.key }} ({{ getLinhasPorAno(grupo.key) }} registros)</h4>
     <table class="table table-bordered table-striped">
      <thead>
       <tr>
