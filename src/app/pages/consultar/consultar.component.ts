@@ -50,17 +50,12 @@ export class ConsultarComponent implements OnInit {
   }
 
   getClassePorEnum(valor: number): string {
-  const label = Situacao[valor];
-  switch (label) {
-    case 'Ativo':
-      return 'text-success';
-    case 'Inativo':
-      return 'text-danger';
-    case 'Pendente':
-      return 'text-primary';
-    default:
-      return '';
-   }
+      const map: { [key: string]: string } = {
+       Ativo: 'text-success',
+       Inativo: 'text-danger',
+       Pendente: 'text-primary'
+     };
+     return map[Situacao[valor]] ?? '';
   }
 
    carregarAgendas(): void {
