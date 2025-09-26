@@ -1,0 +1,14 @@
+.table th,
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+h4 {
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.footer-expand {
+  margin-top: 2rem;
+}
