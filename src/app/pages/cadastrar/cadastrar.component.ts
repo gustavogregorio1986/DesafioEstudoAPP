@@ -15,31 +15,31 @@ import { CommonModule } from '@angular/common';
 })
 export class CadastrarComponent {
 
-   titulo = '';
-   dataInicio !: Date;
-   horaInicio: string = ''; // exemplo: '14:30'
-   horaFim: string = '';    // exemplo: '16:00'
-   dataFim !: Date;
-   descricao = '';
-   enumSituacao: Situacao | null = null;
+  titulo = '';
+  dataInicio !: Date;
+  horaInicio: string = ''; // exemplo: '14:30'
+  horaFim: string = '';    // exemplo: '16:00'
+  dataFim !: Date;
+  descricao = '';
+  enumSituacao: Situacao | null = null;
 
-   sucesso = false;
-   erro = false;
+  sucesso = false;
+  erro = false;
 
-   situacoes: { label: string; value: Situacao }[] = [
+  situacoes: { label: string; value: Situacao }[] = [
     { label: 'Ativo', value: Situacao.Ativo },
     { label: 'Inativo', value: Situacao.Inativo },
     { label: 'Pendente', value: Situacao.Pendente }
   ];
 
-   constructor(private agendaService: AgendaService){}
+  constructor(private agendaService: AgendaService) { }
 
-   salvar(form: NgForm) {
-     if (!this.titulo || !this.dataInicio || !this.dataFim || !this.descricao || !this.enumSituacao) {
-       this.erro = true;
-       this.sucesso = false;
-       return;
-     }
+  salvar(form: NgForm) {
+    if (!this.titulo || !this.dataInicio || !this.dataFim || !this.descricao || !this.enumSituacao) {
+      this.erro = true;
+      this.sucesso = false;
+      return;
+    }
 
     // Cria Date com hora embutida
     const dataInicioStr = `${this.dataInicio}T${this.horaInicio}:00`;
@@ -60,7 +60,7 @@ export class CadastrarComponent {
       return;
     }
 
-     const novaAgenda = new Agenda(
+    const novaAgenda = new Agenda(
       this.titulo,
       inicio,
       fim,
@@ -68,7 +68,7 @@ export class CadastrarComponent {
       this.enumSituacao
     );
 
-     this.agendaService.adicionarAgenda(novaAgenda).subscribe({
+    this.agendaService.adicionarAgenda(novaAgenda).subscribe({
       next: res => {
         this.sucesso = true;
         this.erro = false;
@@ -81,13 +81,13 @@ export class CadastrarComponent {
         this.sucesso = false;
       }
     });
-   }
+  }
 
-   limparFormulario(){
-       this.titulo = '';
-       this.dataInicio = undefined!;
-       this.dataFim = undefined!;
-       this.descricao = '';
-       this.enumSituacao = null;
-   }
+  limparFormulario() {
+    this.titulo = '';
+    this.dataInicio = undefined!;
+    this.dataFim = undefined!;
+    this.descricao = '';
+    this.enumSituacao = null;
+  }
 }
