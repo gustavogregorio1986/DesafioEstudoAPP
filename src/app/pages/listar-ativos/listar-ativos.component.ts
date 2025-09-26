@@ -41,7 +41,7 @@ export class ListarAtivosComponent implements OnInit {
       });
 
       const agrupado: { [ano: string]: Agenda[] } = {};
-      ativos.forEach(agenda => {
+       ativos.forEach(agenda => {
         const ano = agenda.Ano!;
         if (!agrupado[ano]) agrupado[ano] = [];
         agrupado[ano].push(agenda);
