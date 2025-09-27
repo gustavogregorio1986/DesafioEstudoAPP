@@ -10,7 +10,6 @@ import { Situacao } from '../../classes/Situacao';
   imports: [CommonModule, FooterComponent, DatePipe,      // ✅ necessário para | date:'short'
     KeyValuePipe,  // ✅ se estiver usando | keyvalue
     NgFor,         // ✅ para *ngFor
-    NgIf           // ✅ se estiver usando *ngIf
   ],
   templateUrl: './consultar.component.html',
   styleUrl: './consultar.component.css'
@@ -34,6 +33,14 @@ export class ConsultarComponent implements OnInit {
     this.carregarAgendas();
 
   }
+
+  scrollParaAno(ano: string) {
+    const elemento = document.getElementById('ano-' + ano);
+    if (elemento) {
+      elemento.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
 
   getAnos(): string[] {
     return Object.keys(this.agendasPorAno);
