@@ -1,1 +1,38 @@
-<p>listar-inativos works!</p>
+<div class="container mt-4">
+  <p class="fw-bold text-success mb-3">
+    Total geral de registros ativos: {{ totalRegistros }}
+  </p>
+
+  <div *ngFor="let grupo of grupos" class="mb-5">
+    <h4 class="text-primary">{{ grupo.key }} ({{ grupo.value.length }}) Inativos</h4>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Início</th>
+            <th>Fim</th>
+            <th>Situação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let agenda of grupo.value; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ agenda.titulo }}</td>
+            <td>{{ agenda.descricao }}</td>
+            <td>{{ agenda.dataInicio | date:'short' }}</td>
+            <td>{{ agenda.dataFim | date:'short' }}</td>
+            <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+              {{ getSituacaoLabel(agenda.enumSituacao) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-footer class="footer-expand"></app-footer>
+</div>

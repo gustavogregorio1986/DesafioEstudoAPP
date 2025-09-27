@@ -1,11 +1,73 @@
+import { CommonModule, DatePipe, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
+import { FooterComponent } from '../footer/footer.component';
+import { Agenda } from '../../classes/agenda';
+import { AgendaService } from '../../servicos/agenda.service';
+import { Situacao } from '../../classes/Situacao';
 
 @Component({
   selector: 'app-listar-inativos',
-  imports: [],
+  imports: [CommonModule,
+    NgFor,
+    DatePipe,
+    FooterComponent],
   templateUrl: './listar-inativos.component.html',
   styleUrl: './listar-inativos.component.css'
 })
 export class ListarInativosComponent {
 
+  agendasPorAno: { [ano: string]: Agenda[] } = {};
+      grupos: { key: string; value: Agenda[] }[] = [];
+      linhasVisiveis: number = 0;
+      totalRegistros: number = 0;
+    
+      Situacao = Situacao;
+    
+      constructor(private agendaService: AgendaService) { }
+    
+      ngOnInit(): void {
+        this.carregarAgendas();
+      }
+    
+      carregarAgendas(): void {
+        this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
+          const ativos = agendas.filter(a => a.enumSituacao === this.Situacao.Ativo);
+    
+          ativos.forEach(agenda => {
+            agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();
+          });
+    
+          const agrupado: { [ano: string]: Agenda[] } = {};
+          ativos.forEach(agenda => {
+            const ano = agenda.Ano!;
+            if (!agrupado[ano]) agrupado[ano] = [];
+            agrupado[ano].push(agenda);
+          });
+    
+          this.agendasPorAno = Object.fromEntries(
+            Object.entries(agrupado).sort((a, b) => +b[0] - +a[0])
+          );
+    
+          this.grupos = Object.entries(this.agendasPorAno).map(([ano, lista]) => ({
+            key: ano,
+            value: lista
+          }));
+    
+          this.linhasVisiveis = ativos.length;
+          this.totalRegistros = ativos.length;
+        });
+      }
+    
+      getSituacaoLabel(valor: number): string {
+        return Situacao[valor] ?? 'Desconhecida';
+      }
+    
+      getClassePorEnum(valor: number): string {
+        const map: { [key: string]: string } = {
+          Ativo: 'text-success',
+          Inativo: 'text-danger',
+          Pendente: 'text-primary'
+        };
+        return map[Situacao[valor]] ?? '';
+      }
 }
