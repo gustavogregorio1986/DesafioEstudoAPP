@@ -4,12 +4,14 @@ import { AgendaService } from '../../servicos/agenda.service';
 import { FooterComponent } from '../footer/footer.component';
 import { CommonModule, DatePipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
 import { Situacao } from '../../classes/Situacao';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-consultar',
-  imports: [CommonModule, FooterComponent, DatePipe,      // ✅ necessário para | date:'short'
+  imports: [FormsModule, CommonModule, FooterComponent, DatePipe,      // ✅ necessário para | date:'short'
     KeyValuePipe,  // ✅ se estiver usando | keyvalue
     NgFor,         // ✅ para *ngFor
+    NgIf           // ✅ se estiver usando *ngIf
   ],
   templateUrl: './consultar.component.html',
   styleUrl: './consultar.component.css'
@@ -21,6 +23,10 @@ export class ConsultarComponent implements OnInit {
 
   grupos: { key: string; value: Agenda[] }[] = [];
   totalRegistros: number = 0;
+  agendasOriginais: Agenda[] = [];       // Lista completa de agendas
+  agendasFiltradas: Agenda[] = [];       // Lista filtrada por data
+  dataInicioFiltro: string | null = null; // Data inicial do filtro (formato yyyy-MM-dd)
+  dataFimFiltro: string | null = null;    // Data final do filtro (formato yyyy-MM-dd)
 
   enumSituacao: Situacao = Situacao.Pendente; // exemplo de valor inicial
 
@@ -34,13 +40,23 @@ export class ConsultarComponent implements OnInit {
 
   }
 
-  scrollParaAno(ano: string) {
+  filtrarPorData() {
+    this.agendasFiltradas = this.agendasOriginais.filter(agenda => {
+      const inicio = new Date(agenda.dataInicio);
+      const filtroInicio = this.dataInicioFiltro ? new Date(this.dataInicioFiltro) : null;
+      const filtroFim = this.dataFimFiltro ? new Date(this.dataFimFiltro) : null;
+
+      return (!filtroInicio || inicio >= filtroInicio) &&
+        (!filtroFim || inicio <= filtroFim);
+    });
+  }
+
+   scrollParaAno(ano: string) {
     const elemento = document.getElementById('ano-' + ano);
     if (elemento) {
       elemento.scrollIntoView({ behavior: 'smooth' });
     }
   }
-
 
   getAnos(): string[] {
     return Object.keys(this.agendasPorAno);
