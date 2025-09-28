@@ -64,6 +64,7 @@
               <th>Início</th>
               <th>Fim</th>
               <th>Situação</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -74,6 +75,11 @@
               <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
               <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
                 {{ getSituacaoLabel(agenda.enumSituacao) }}
+              </td>
+               <td>
+                <button class="btn btn-danger btn-sm" (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null">
+                    Excluir
+                </button>
               </td>
             </tr>
           </tbody>

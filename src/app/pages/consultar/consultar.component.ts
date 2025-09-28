@@ -32,7 +32,7 @@ export class ConsultarComponent implements OnInit {
   dataFimFiltro: string | null = null;
   totalRegistros: number = 0;
 
-  constructor(private agendaService: AgendaService) {}
+  constructor(private agendaService: AgendaService) { }
 
   ngOnInit(): void {
     this.carregarAgendas();
@@ -81,7 +81,7 @@ export class ConsultarComponent implements OnInit {
     this.agendasFiltradas = this.agendasOriginais.filter(agenda => {
       const inicio = new Date(agenda.dataInicio);
       return (!filtroInicio || inicio >= filtroInicio) &&
-             (!filtroFim || inicio <= filtroFim);
+        (!filtroFim || inicio <= filtroFim);
     });
 
     this.agruparPorAno();
@@ -116,6 +116,16 @@ export class ConsultarComponent implements OnInit {
     };
     return map[Situacao[valor]] ?? '';
   }
+
+  excluirAgenda(id: number): void {
+    if (confirm('Deseja realmente excluir esta agenda?')) {
+      this.agendaService.deletarAgenda(id).subscribe({
+        next: () => this.carregarAgendas(),
+        error: (err) => console.error('Erro ao excluir agenda:', err)
+      });
+    }
+  }
+
 
   getLinhasPorAno(ano: string): number {
     return this.agendasPorAno[ano]?.length ?? 0;

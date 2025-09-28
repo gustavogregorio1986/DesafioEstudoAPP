@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class AgendaService {
   private apiUrl = 'https://localhost:7165/api/Agenda';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   adicionarAgenda(agenda: Agenda): Observable<Agenda> {
     return this.http.post<Agenda>(`${this.apiUrl}/AdicionarAgenda`, agenda);
@@ -27,8 +27,8 @@ export class AgendaService {
     return this.http.get<Agenda[]>(`${this.apiUrl}/ListarAgendasInativas`);
   }
 
-  listarAgendasPendentes(): Observable<Agenda[]> {
-    return this.http.get<Agenda[]>(`${this.apiUrl}/ListarAgendasPendentes`);
+  deletarAgenda(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/Deletar/${id}`);
   }
 
 }
