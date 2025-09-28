@@ -1,68 +1,90 @@
 <div class="container">
- <p class="fw-bold text-primary mb-3">
-  Total geral de registros: {{ totalRegistros }}
-</p>
-<div class="card p-3 mb-4 shadow-sm">
-  <div class="d-flex flex-wrap align-items-center">
-    <label class="me-2 fw-bold">De:</label>
-    <input type="date" [(ngModel)]="dataInicioFiltro" class="form-control me-2" style="max-width: 200px;">
+  <!-- Total de registros filtrados -->
+  <p class="fw-bold text-primary mb-3">
+    Total geral de registros: {{ agendasFiltradas.length }}
+  </p>
 
-    <label class="me-2 fw-bold">Até:</label>
-    <input type="date" [(ngModel)]="dataFimFiltro" class="form-control me-2" style="max-width: 200px;">
+  <!-- Filtro por data -->
+  <div class="card p-3 mb-4 shadow-sm">
+    <div class="d-flex flex-wrap align-items-center">
+      <label class="me-2 fw-bold">De:</label>
+      <input type="date" [(ngModel)]="dataInicioFiltro" class="form-control me-2" style="max-width: 200px;">
 
-    <button class="btn btn-primary mt-2 mt-md-0" (click)="filtrarPorData()">
-      Filtrar
-    </button>
+      <label class="me-2 fw-bold">Até:</label>
+      <input type="date" [(ngModel)]="dataFimFiltro" class="form-control me-2" style="max-width: 200px;">
+
+      <button class="btn btn-primary mt-2 mt-md-0 me-2" (click)="filtrarPorData()">
+        Filtrar
+      </button>
+
+      <button class="btn btn-outline-secondary mt-2 mt-md-0"
+              [disabled]="!dataInicioFiltro && !dataFimFiltro"
+              (click)="limparFiltro()">
+        Limpar
+      </button>
+    </div>
   </div>
-</div>
-<!-- Botões para navegar até cada ano -->
+
+  <!-- Mensagem se não houver registros -->
+  <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning">
+    Nenhum registro encontrado para o intervalo selecionado.
+  </div>
+
+  <!-- Botões para navegar por ano -->
   <div class="mb-4">
     <h5>Navegar por ano:</h5>
-    <button *ngFor="let grupo of agendasPorAno | keyvalue"
-            class="btn btn-outline-primary me-2 mb-2"
-            (click)="scrollParaAno(grupo.key)">
-      {{ grupo.key }}
-    </button>
+    <div class="d-flex flex-wrap">
+      <button *ngFor="let grupo of agendasPorAno | keyvalue" [attr.id]="'ano-' + grupo.key"
+              class="btn btn-outline-primary me-2 mb-2"
+              (click)="scrollParaAno(grupo.key)">
+        {{ grupo.key }}
+      </button>
+    </div>
   </div>
- <div class="row">
-  <div class="col-md-4" *ngFor="let grupo of grupos">
-    <div class="card text-center mb-3">
-      <div class="card-body">
-        <h5 class="card-title">{{ grupo.key }}</h5>
-        <p class="card-text">{{ grupo.value.length }} registros</p>
+
+  <!-- Cards resumo por ano -->
+  <div class="row">
+    <div class="col-md-4" *ngFor="let grupo of agendasPorAno | keyvalue">
+      <div class="card text-center mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ grupo.key }}</h5>
+          <p class="card-text">{{ grupo.value.length }} registros</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
- <div class="row justify-content-center">
- <div class="col-md-10">
-  <div *ngFor="let grupo of agendasPorAno | keyvalue">
-    <h4>Ano: {{ grupo.key }} ({{ getLinhasPorAno(grupo.key) }} registros)</h4>
-    <table class="table table-bordered table-striped">
-     <thead>
-      <tr>
-        <th>Título</th>
-        <th>Descrição</th>
-        <th>Início</th>
-        <th>Fim</th>
-        <th>Situação</th>
-      </tr>
-     </thead>
-     <tbody>
-      <tr *ngFor="let agenda of grupo.value">
-        <td>{{ agenda.titulo }}</td>
-        <td>{{ agenda.descricao }}</td>
-        <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
-        <td *ngIf="!agenda.dataFim">—</td>
-        <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-         {{ getSituacaoLabel(agenda.enumSituacao) }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
- </div>
-</div>
 
-<app-footer class="footer-expand"></app-footer>
+  <!-- Tabelas agrupadas por ano -->
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div *ngFor="let grupo of agendasPorAno | keyvalue" [attr.id]="'ano-' + grupo.key">
+        <h4 class="mt-5">Ano: {{ grupo.key }} ({{ grupo.value.length }} registros)</h4>
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Descrição</th>
+              <th>Início</th>
+              <th>Fim</th>
+              <th>Situação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let agenda of grupo.value">
+              <td>{{ agenda.titulo }}</td>
+              <td>{{ agenda.descricao }}</td>
+              <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+              <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+                {{ getSituacaoLabel(agenda.enumSituacao) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <app-footer class="footer-expand"></app-footer>
+</div>
