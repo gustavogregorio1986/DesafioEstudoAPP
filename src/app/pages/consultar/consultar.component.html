@@ -17,6 +17,13 @@
     </div>
   </div>
 
+  <!-- Botão para gerar relatório geral -->
+  <div class="mb-3">
+    <button class="btn btn-info" (click)="gerarRelatorioGeral()">
+      📄 Gerar Relatório Geral
+    </button>
+  </div>
+
   <!-- Mensagem se não houver registros -->
   <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning">
     Nenhum registro encontrado para o intervalo selecionado.

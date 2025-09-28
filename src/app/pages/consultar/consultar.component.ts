@@ -69,6 +69,22 @@ export class ConsultarComponent implements OnInit {
      window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+   gerarRelatorioGeral(): void {
+  this.agendaService.gerarRelatorioGeral().subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'relatorio-geral.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('Erro ao gerar relatório:', err);
+      alert('Erro ao gerar relatório.');
+    }
+  });
+}
 
   editarAgendaSelecionada(): void {
     if (!this.agendaSelecionada || !this.agendaSelecionada.id) return;

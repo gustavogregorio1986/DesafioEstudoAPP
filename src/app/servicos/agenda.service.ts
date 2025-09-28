@@ -34,4 +34,9 @@ export class AgendaService {
   editarAgenda(id: number, agenda: Agenda): Observable<any> {
     return this.http.put(`${this.apiUrl}/AtualizarAgenda/${id}`, agenda);
   }
+
+  gerarRelatorioGeral(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/GerarRelatorio`, { responseType: 'blob' });
+  }
+
 }
