@@ -16,12 +16,14 @@ import { CommonModule } from '@angular/common';
 export class CadastrarComponent {
 
   titulo = '';
-  dataInicio !: Date;
+  dataInicio!: string; // formato yyyy-MM-dd
   horaInicio: string = ''; // exemplo: '14:30'
   horaFim: string = '';    // exemplo: '16:00'
-  dataFim !: Date;
+  dataFim!: string;        // formato yyyy-MM-dd
   descricao = '';
   enumSituacao: Situacao | null = null;
+
+  diaInteiroSelecionado: boolean = false;
 
   sucesso = false;
   erro = false;
@@ -35,24 +37,32 @@ export class CadastrarComponent {
   constructor(private agendaService: AgendaService) { }
 
   salvar(form: NgForm) {
-    if (!this.titulo || !this.dataInicio || !this.dataFim || !this.descricao || !this.enumSituacao) {
+    if (!this.titulo || !this.dataInicio || !this.descricao || !this.enumSituacao) {
       this.erro = true;
       this.sucesso = false;
       return;
     }
 
-    // Cria Date com hora embutida
-    const dataInicioStr = `${this.dataInicio}T${this.horaInicio}:00`;
-    const dataFimStr = `${this.dataFim}T${this.horaFim}:00`;
+    let inicio: Date;
+    let fim: Date;
 
-    const inicio = new Date(dataInicioStr);
-    const fim = new Date(dataFimStr);
+    if (this.diaInteiroSelecionado || !this.dataFim) {
+      // Assume dia inteiro com base na data de início
+      inicio = new Date(`${this.dataInicio}T00:00:00`);
+      fim = new Date(`${this.dataInicio}T23:59:59`);
+    } else {
+      // Usa os campos manuais
+      const dataInicioStr = `${this.dataInicio}T${this.horaInicio || '00:00'}:00`;
+      const dataFimStr = `${this.dataFim}T${this.horaFim || '23:59'}:00`;
 
-    // ✅ Subtrai 3 horas para compensar o UTC
+      inicio = new Date(dataInicioStr);
+      fim = new Date(dataFimStr);
+    }
+
+    // Ajuste UTC -3
     inicio.setHours(inicio.getHours() - 3);
     fim.setHours(fim.getHours() - 3);
 
-    // Validação: fim deve ser maior que início
     if (fim <= inicio) {
       this.erro = true;
       this.sucesso = false;
@@ -85,9 +95,12 @@ export class CadastrarComponent {
 
   limparFormulario() {
     this.titulo = '';
-    this.dataInicio = undefined!;
-    this.dataFim = undefined!;
+    this.dataInicio = '';
+    this.dataFim = '';
+    this.horaInicio = '';
+    this.horaFim = '';
     this.descricao = '';
     this.enumSituacao = null;
+    this.diaInteiroSelecionado = false;
   }
 }

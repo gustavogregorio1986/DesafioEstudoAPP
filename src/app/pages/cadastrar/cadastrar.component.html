@@ -14,23 +14,54 @@
       Data de início é obrigatória.
     </div>
 
-    <input [(ngModel)]="horaInicio" name="horaInicio" type="time" required class="form-control mb-2"
-       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['horaInicio'].invalid}">
-    <div *ngIf="formAgenda.submitted && formAgenda.controls['horaInicio'].invalid" class="text-danger">
-       Hora de início é obrigatória.
+    <input [(ngModel)]="horaInicio" name="horaInicio" type="time"
+       [required]="!diaInteiroSelecionado"
+       class="form-control mb-2"
+       [ngClass]="{
+         'is-invalid': formAgenda.submitted &&
+                       !diaInteiroSelecionado &&
+                       formAgenda.controls['horaInicio'].invalid
+       }">
+     <div *ngIf="formAgenda.submitted && !diaInteiroSelecionado && formAgenda.controls['horaInicio']?.invalid"
+     class="text-danger">
+     Hora de início é obrigatória.
+   </div>
+
+    <!-- Checkbox Dia inteiro -->
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" [(ngModel)]="diaInteiroSelecionado" id="diaInteiroCheck" name="diaInteiro">
+      <label class="form-check-label" for="diaInteiroCheck">
+        Dia inteiro
+      </label>
     </div>
 
-    <input [(ngModel)]="dataFim" name="dataFim" type="date" required class="form-control mb-2"
+    <input [(ngModel)]="dataFim" name="dataFim" type="date" required  class="form-control mb-2"
        [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['dataFim'].invalid}">
     <div *ngIf="formAgenda.submitted && formAgenda.controls['dataFim'].invalid" class="text-danger">
-      Data de fim é obrigatória.
+      Data de início é obrigatória.
     </div>
 
-    <input [(ngModel)]="horaFim" name="horaFim" type="time" required class="form-control mb-2"
-       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['horaFim'].invalid}">
-    <div *ngIf="formAgenda.submitted && formAgenda.controls['horaFim'].invalid" class="text-danger">
-      Hora de fim é obrigatória.
-    </div>
+    <!-- Hora de início (somente se não for dia inteiro) -->
+<div *ngIf="!diaInteiroSelecionado">
+  <label for="horaInicio">Hora de Fim</label>
+  <input type="time" id="horaFim" name="horaInicio"
+         [(ngModel)]="horaFim"
+         [required]="!diaInteiroSelecionado"
+         class="form-control mb-2"
+         [ngClass]="{
+           'is-invalid': formAgenda.submitted &&
+                         formAgenda.controls['horaFim'].invalid
+         }">
+  <div *ngIf="formAgenda.submitted && formAgenda.controls['horaFim'].invalid"
+       class="text-danger">
+    Hora de fim é obrigatória.
+  </div>
+</div>
+
+  <div *ngIf="formAgenda.submitted && formAgenda.controls['horaFim'] && formAgenda.controls['horaFim'].invalid"
+     class="text-danger">
+  Hora de fim é obrigatória.
+</div>
 
     <textarea [(ngModel)]="descricao" name="descricao" placeholder="Descrição" required class="form-control mb-2"
           [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['descricao'].invalid}"></textarea>
