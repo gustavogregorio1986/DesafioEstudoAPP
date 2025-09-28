@@ -65,6 +65,9 @@ export class ConsultarComponent implements OnInit {
     this.agendaSelecionada = { ...agenda }; // cria uma cópia para edição
   }
 
+  scrollParaTopo(): void {
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
 
   editarAgendaSelecionada(): void {
