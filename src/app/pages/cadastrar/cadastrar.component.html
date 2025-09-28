@@ -2,86 +2,56 @@
   <h2>Cadastro de Agenda</h2>
 
   <form #formAgenda="ngForm" (ngSubmit)="salvar(formAgenda)" novalidate>
-    <input [(ngModel)]="titulo" name="titulo" placeholder="Título" required class="form-control mb-2"
-       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['titulo'].invalid}">
-    <div *ngIf="formAgenda.submitted && formAgenda.controls['titulo'].invalid" class="text-danger">
-      Título é obrigatório.
-    </div>
 
-    <input [(ngModel)]="dataInicio" name="dataInicio" type="date" required  class="form-control mb-2"
-       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['dataInicio'].invalid}">
-    <div *ngIf="formAgenda.submitted && formAgenda.controls['dataInicio'].invalid" class="text-danger">
-      Data de início é obrigatória.
-    </div>
+    <!-- Título -->
+    <input [(ngModel)]="titulo" name="titulo" placeholder="Título" required class="form-control mb-2">
 
+    <!-- Data de Início -->
+    <input [(ngModel)]="dataInicio" name="dataInicio" type="date" required class="form-control mb-2">
+
+    <!-- Hora de Início -->
     <input [(ngModel)]="horaInicio" name="horaInicio" type="time"
-       [required]="!diaInteiroSelecionado"
-       class="form-control mb-2"
-       [ngClass]="{
-         'is-invalid': formAgenda.submitted &&
-                       !diaInteiroSelecionado &&
-                       formAgenda.controls['horaInicio'].invalid
-       }">
-     <div *ngIf="formAgenda.submitted && !diaInteiroSelecionado && formAgenda.controls['horaInicio']?.invalid"
-     class="text-danger">
-     Hora de início é obrigatória.
-   </div>
+           [required]="!diaInteiroSelecionado"
+           class="form-control mb-2">
 
     <!-- Checkbox Dia inteiro -->
     <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" [(ngModel)]="diaInteiroSelecionado" id="diaInteiroCheck" name="diaInteiro">
+      <input class="form-check-input" type="checkbox"
+             [(ngModel)]="diaInteiroSelecionado"
+             id="diaInteiroCheck" name="diaInteiro">
       <label class="form-check-label" for="diaInteiroCheck">
         Dia inteiro
       </label>
     </div>
 
-    <input [(ngModel)]="dataFim" name="dataFim" type="date" required  class="form-control mb-2"
-       [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['dataFim'].invalid}">
-    <div *ngIf="formAgenda.submitted && formAgenda.controls['dataFim'].invalid" class="text-danger">
-      Data de início é obrigatória.
+    <!-- Data de Fim -->
+    <input [(ngModel)]="dataFim" name="dataFim" type="date" required class="form-control mb-2">
+
+    <!-- Hora de Fim (somente se não for dia inteiro) -->
+    <div *ngIf="!diaInteiroSelecionado">
+      <label for="horaFim">Hora de Fim</label>
+      <input type="time" id="horaFim" name="horaFim"
+             [(ngModel)]="horaFim"
+             [required]="!diaInteiroSelecionado"
+             class="form-control mb-2">
     </div>
 
-    <!-- Hora de início (somente se não for dia inteiro) -->
-<div *ngIf="!diaInteiroSelecionado">
-  <label for="horaInicio">Hora de Fim</label>
-  <input type="time" id="horaFim" name="horaInicio"
-         [(ngModel)]="horaFim"
-         [required]="!diaInteiroSelecionado"
-         class="form-control mb-2"
-         [ngClass]="{
-           'is-invalid': formAgenda.submitted &&
-                         formAgenda.controls['horaFim'].invalid
-         }">
-  <div *ngIf="formAgenda.submitted && formAgenda.controls['horaFim'].invalid"
-       class="text-danger">
-    Hora de fim é obrigatória.
-  </div>
-</div>
+    <!-- Descrição -->
+    <textarea [(ngModel)]="descricao" name="descricao" placeholder="Descrição" required class="form-control mb-2"></textarea>
 
-  <div *ngIf="formAgenda.submitted && formAgenda.controls['horaFim'] && formAgenda.controls['horaFim'].invalid"
-     class="text-danger">
-  Hora de fim é obrigatória.
-</div>
-
-    <textarea [(ngModel)]="descricao" name="descricao" placeholder="Descrição" required class="form-control mb-2"
-          [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['descricao'].invalid}"></textarea>
-    <div *ngIf="formAgenda.submitted && formAgenda.controls['descricao'].invalid" class="text-danger">
-      Descrição é obrigatória.
-    </div>
-
-    <select [(ngModel)]="enumSituacao" name="enumSituacao" required class="form-select mb-3"
-        [ngClass]="{'is-invalid': formAgenda.submitted && formAgenda.controls['enumSituacao'].invalid}">
-        <option [ngValue]="null">Selecione uma situação</option>
-        <option *ngFor="let s of situacoes" [ngValue]="s.value">{{ s.label }}</option>
+    <!-- Situação -->
+    <select [(ngModel)]="enumSituacao" name="enumSituacao" required class="form-select mb-3">
+      <option [ngValue]="null">Selecione uma situação</option>
+      <option *ngFor="let s of situacoes" [ngValue]="s.value">{{ s.label }}</option>
     </select>
-    <div *ngIf="formAgenda.submitted && formAgenda.controls['enumSituacao'].invalid" class="text-danger">
-      Situação é obrigatória.
-    </div>
 
+    <!-- Botão de envio -->
     <button type="submit" class="btn btn-primary">Cadastrar</button>
   </form>
 
+  <!-- Feedback -->
   <div *ngIf="sucesso" class="alert alert-success mt-3">Cadastro realizado com sucesso!</div>
   <div *ngIf="erro" class="alert alert-danger mt-3">Erro ao cadastrar. Tente novamente.</div>
 </div>
+
 <app-footer></app-footer>
