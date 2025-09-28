@@ -42,12 +42,10 @@ export class ConsultarComponent implements OnInit {
     this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
       this.agendasOriginais = agendas;
 
-      // Adiciona o ano a cada agenda
       agendas.forEach(agenda => {
         agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();
       });
 
-      // Inicializa dados filtrados
       this.agendasFiltradas = [...this.agendasOriginais];
       this.agruparPorAno();
       this.totalRegistros = this.agendasFiltradas.length;

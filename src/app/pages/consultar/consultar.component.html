@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- Total de registros filtrados -->
   <p class="fw-bold text-primary mb-3">
     Total geral de registros: {{ agendasFiltradas.length }}
   </p>
@@ -13,15 +12,11 @@
       <label class="me-2 fw-bold">Até:</label>
       <input type="date" [(ngModel)]="dataFimFiltro" class="form-control me-2" style="max-width: 200px;">
 
-      <button class="btn btn-primary mt-2 mt-md-0 me-2" (click)="filtrarPorData()">
-        Filtrar
-      </button>
+      <button class="btn btn-primary mt-2 mt-md-0 me-2" (click)="filtrarPorData()">Filtrar</button>
 
       <button class="btn btn-outline-secondary mt-2 mt-md-0"
               [disabled]="!dataInicioFiltro && !dataFimFiltro"
-              (click)="limparFiltro()">
-        Limpar
-      </button>
+              (click)="limparFiltro()">Limpar</button>
     </div>
   </div>
 
@@ -34,7 +29,7 @@
   <div class="mb-4">
     <h5>Navegar por ano:</h5>
     <div class="d-flex flex-wrap">
-      <button *ngFor="let grupo of agendasPorAno | keyvalue" [attr.id]="'ano-' + grupo.key"
+      <button *ngFor="let grupo of agendasPorAno | keyvalue"
               class="btn btn-outline-primary me-2 mb-2"
               (click)="scrollParaAno(grupo.key)">
         {{ grupo.key }}
@@ -57,8 +52,10 @@
   <!-- Tabelas agrupadas por ano -->
   <div class="row justify-content-center">
     <div class="col-md-10">
-      <div *ngFor="let grupo of agendasPorAno | keyvalue" [attr.id]="'ano-' + grupo.key">
-        <h4 class="mt-5">Ano: {{ grupo.key }} ({{ grupo.value.length }} registros)</h4>
+      <div *ngFor="let grupo of agendasPorAno | keyvalue">
+        <h4 class="mt-5" [attr.id]="'ano-' + grupo.key">
+          Ano: {{ grupo.key }} ({{ grupo.value.length }} registros)
+        </h4>
         <table class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -85,6 +82,5 @@
     </div>
   </div>
 
-  <!-- Rodapé -->
   <app-footer class="footer-expand"></app-footer>
 </div>
