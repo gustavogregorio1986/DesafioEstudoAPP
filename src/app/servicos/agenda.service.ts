@@ -31,4 +31,7 @@ export class AgendaService {
     return this.http.delete(`${this.apiUrl}/Deletar/${id}`);
   }
 
+  editarAgenda(id: number, agenda: Agenda): Observable<any> {
+    return this.http.put(`${this.apiUrl}/AtualizarAgenda/${id}`, agenda);
+  }
 }

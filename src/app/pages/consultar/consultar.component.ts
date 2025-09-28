@@ -27,10 +27,19 @@ export class ConsultarComponent implements OnInit {
   agendasOriginais: Agenda[] = [];
   agendasFiltradas: Agenda[] = [];
   grupos: { key: string; value: Agenda[] }[] = [];
+  agendaSelecionada: Agenda | null = null;
 
   dataInicioFiltro: string | null = null;
   dataFimFiltro: string | null = null;
   totalRegistros: number = 0;
+
+   titulo = '';
+  dataInicio!: string; // formato yyyy-MM-dd
+  horaInicio: string = ''; // exemplo: '14:30'
+  horaFim: string = '';    // exemplo: '16:00'
+  dataFim!: string;        // formato yyyy-MM-dd
+  descricao = '';
+  enumSituacao: Situacao | null = null;
 
   constructor(private agendaService: AgendaService) { }
 
@@ -49,6 +58,28 @@ export class ConsultarComponent implements OnInit {
       this.agendasFiltradas = [...this.agendasOriginais];
       this.agruparPorAno();
       this.totalRegistros = this.agendasFiltradas.length;
+    });
+  }
+
+  selecionarAgenda(agenda: Agenda): void {
+    this.agendaSelecionada = { ...agenda }; // cria uma cópia para edição
+  }
+
+
+
+  editarAgendaSelecionada(): void {
+    if (!this.agendaSelecionada || !this.agendaSelecionada.id) return;
+
+    this.agendaService.editarAgenda(this.agendaSelecionada.id, this.agendaSelecionada).subscribe({
+      next: () => {
+        alert('Agenda atualizada com sucesso!');
+        this.carregarAgendas();
+        this.agendaSelecionada = null;
+      },
+      error: err => {
+        console.error('Erro ao atualizar agenda:', err);
+        alert('Erro ao atualizar.');
+      }
     });
   }
 
@@ -96,6 +127,12 @@ export class ConsultarComponent implements OnInit {
     this.agruparPorAno();
     this.totalRegistros = this.agendasFiltradas.length;
   }
+
+  situacoes: { label: string; value: Situacao }[] = [
+    { label: 'Ativo', value: Situacao.Ativo },
+    { label: 'Inativo', value: Situacao.Inativo },
+    { label: 'Pendente', value: Situacao.Pendente }
+  ];
 
   scrollParaAno(ano: string): void {
     const elemento = document.getElementById('ano-' + ano);
