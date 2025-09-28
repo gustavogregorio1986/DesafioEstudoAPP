@@ -23,6 +23,11 @@
       📄 Gerar Relatório Geral
     </button>
   </div>
+  <div class="mb-3">
+    <button class="btn btn-success mb-3" (click)="exportarExcel()">
+           📊 Exportar para Excel
+    </button>
+  </div>
 
   <!-- Mensagem se não houver registros -->
   <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning">

@@ -39,4 +39,9 @@ export class AgendaService {
     return this.http.get(`${this.apiUrl}/GerarRelatorio`, { responseType: 'blob' });
   }
 
+  exportarExcel(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/ExportarExcel`, {
+      responseType: 'blob'
+    });
+  }
 }

@@ -33,7 +33,7 @@ export class ConsultarComponent implements OnInit {
   dataFimFiltro: string | null = null;
   totalRegistros: number = 0;
 
-   titulo = '';
+  titulo = '';
   dataInicio!: string; // formato yyyy-MM-dd
   horaInicio: string = ''; // exemplo: '14:30'
   horaFim: string = '';    // exemplo: '16:00'
@@ -66,25 +66,25 @@ export class ConsultarComponent implements OnInit {
   }
 
   scrollParaTopo(): void {
-     window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-   gerarRelatorioGeral(): void {
-  this.agendaService.gerarRelatorioGeral().subscribe({
-    next: (blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'relatorio-geral.pdf';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    },
-    error: (err) => {
-      console.error('Erro ao gerar relatório:', err);
-      alert('Erro ao gerar relatório.');
-    }
-  });
-}
+  gerarRelatorioGeral(): void {
+    this.agendaService.gerarRelatorioGeral().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'relatorio-geral.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Erro ao gerar relatório:', err);
+        alert('Erro ao gerar relatório.');
+      }
+    });
+  }
 
   editarAgendaSelecionada(): void {
     if (!this.agendaSelecionada || !this.agendaSelecionada.id) return;
@@ -182,6 +182,22 @@ export class ConsultarComponent implements OnInit {
     }
   }
 
+  exportarExcel(): void {
+    this.agendaService.exportarExcel().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'agenda.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Erro ao exportar Excel:', err);
+        alert('Erro ao exportar Excel.');
+      }
+    });
+  }
 
   getLinhasPorAno(ano: string): number {
     return this.agendasPorAno[ano]?.length ?? 0;
