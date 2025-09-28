@@ -40,7 +40,7 @@ export class AgendaService {
   }
 
   exportarExcel(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/ExportarExcel`, {
+    return this.http.get(`${this.apiUrl}/ExportarExcelPorAno`, {
       responseType: 'blob'
     });
   }
