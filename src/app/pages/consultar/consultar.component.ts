@@ -97,10 +97,6 @@ export class ConsultarComponent implements OnInit {
     this.agendasFiltradas = [...this.agendasOriginais];
     this.agruparPorAno();
     this.totalRegistros = this.agendasFiltradas.length;
-
-    console.log('🔄 Filtro limpo');
-    console.log('✅ Restaurado:', this.agendasFiltradas.length);
-    console.log('📊 Agrupado:', Object.keys(this.agendasPorAno));
   }
 
   scrollParaAno(ano: string): void {
