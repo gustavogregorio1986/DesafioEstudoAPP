@@ -45,6 +45,7 @@
       </button>
     </div>
   </div>
+  
 
   <!-- Cards resumo por ano -->
   <div class="row">
@@ -77,6 +78,11 @@
             </tr>
           </thead>
           <tbody>
+          <div class="navegacao-mes" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+             <button (click)="voltarMes()">◀ Mês anterior</button>
+             <span style="font-weight: bold;">{{ mesAtual | date: 'MMMM yyyy' }}</span>
+             <button (click)="avancarMes()">Próximo mês ▶</button>
+          </div>
             <tr *ngFor="let agenda of grupo.value">
               <td>{{ agenda.titulo }}</td>
               <td>{{ agenda.descricao }}</td>

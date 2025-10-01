@@ -40,6 +40,10 @@ export class ConsultarComponent implements OnInit {
   dataFim!: string;        // formato yyyy-MM-dd
   descricao = '';
   enumSituacao: Situacao | null = null;
+  agendasPorMes: { [mes: string]: any[] } = {};
+
+
+  mesAtual: Date = new Date(); // Começa com o mês atual
 
   constructor(private agendaService: AgendaService) { }
 
@@ -61,12 +65,55 @@ export class ConsultarComponent implements OnInit {
     });
   }
 
+  voltarMes(): void {
+    this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() - 1, 1);
+    this.filtrarPorMes(); // Atualiza os dados do mês
+  }
+
+  avancarMes(): void {
+    this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() + 1, 1);
+    this.filtrarPorMes(); // Atualiza os dados do mês
+  }
+
+  filtrarPorMes(): void {
+    const ano = this.mesAtual.getFullYear();
+    const mes = this.mesAtual.getMonth();
+
+    this.agendasFiltradas = this.agendasOriginais.filter(agenda => {
+      const data = new Date(agenda.dataInicio);
+      return data.getFullYear() === ano && data.getMonth() === mes;
+    });
+
+    this.agruparPorMes(); // Atualiza os grupos
+    this.totalRegistros = this.agendasFiltradas.length;
+  }
+
   selecionarAgenda(agenda: Agenda): void {
     this.agendaSelecionada = { ...agenda }; // cria uma cópia para edição
   }
 
   scrollParaTopo(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  agruparPorMes(): void {
+    this.agendasPorMes = {};
+
+    this.agendasFiltradas.forEach(agenda => {
+      const data = new Date(agenda.dataInicio);
+      const mes = `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}`; // Ex: "2025-10"
+
+      if (!this.agendasPorMes[mes]) {
+        this.agendasPorMes[mes] = [];
+      }
+
+      this.agendasPorMes[mes].push(agenda);
+    });
+
+    this.grupos = Object.entries(this.agendasPorMes).map(([mes, lista]) => ({
+      key: mes,
+      value: lista
+    }));
   }
 
   gerarRelatorioGeral(): void {
