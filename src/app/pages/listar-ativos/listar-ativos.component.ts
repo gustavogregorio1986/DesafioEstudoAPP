@@ -21,44 +21,56 @@ export class ListarAtivosComponent implements OnInit {
 
   agendasPorAno: { [ano: string]: Agenda[] } = {};
   grupos: { key: string; value: Agenda[] }[] = [];
-  linhasVisiveis: number = 0;
   totalRegistros: number = 0;
 
   Situacao = Situacao;
 
-  constructor(private agendaService: AgendaService) { }
+  constructor(private agendaService: AgendaService) {}
 
   ngOnInit(): void {
     this.carregarAgendas();
   }
 
-  carregarAgendas(): void {
+  private carregarAgendas(): void {
     this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
-      const ativos = agendas.filter(a => a.enumSituacao === this.Situacao.Ativo);
-
-      ativos.forEach(agenda => {
-        agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();
-      });
-
-      const agrupado: { [ano: string]: Agenda[] } = {};
-      ativos.forEach(agenda => {
-        const ano = agenda.Ano!;
-        if (!agrupado[ano]) agrupado[ano] = [];
-        agrupado[ano].push(agenda);
-      });
-
-      this.agendasPorAno = Object.fromEntries(
-        Object.entries(agrupado).sort((a, b) => +b[0] - +a[0])
-      );
-
-      this.grupos = Object.entries(this.agendasPorAno).map(([ano, lista]) => ({
-        key: ano,
-        value: lista
-      }));
-
-      this.linhasVisiveis = ativos.length;
+      const ativos = this.filtrarAtivos(agendas);
       this.totalRegistros = ativos.length;
+
+      ativos.forEach(agenda => {
+        agenda.Ano = this.extrairAno(agenda);
+      });
+
+      this.agendasPorAno = this.agruparPorAno(ativos);
+      this.grupos = this.converterParaGrupos(this.agendasPorAno);
     });
+  }
+
+  private filtrarAtivos(agendas: Agenda[]): Agenda[] {
+    return agendas.filter(a => a.enumSituacao === this.Situacao.Ativo);
+  }
+
+  private extrairAno(agenda: Agenda): string {
+    const data = agenda.dataFim ?? agenda.dataInicio;
+    return new Date(data).getFullYear().toString();
+  }
+
+  private agruparPorAno(agendas: Agenda[]): { [ano: string]: Agenda[] } {
+    const agrupado: { [ano: string]: Agenda[] } = {};
+    agendas.forEach(agenda => {
+      const ano = agenda.Ano!;
+      if (!agrupado[ano]) agrupado[ano] = [];
+      agrupado[ano].push(agenda);
+    });
+    return Object.fromEntries(
+      Object.entries(agrupado).sort((a, b) => +b[0] - +a[0])
+    );
+  }
+
+  private converterParaGrupos(agendasPorAno: { [ano: string]: Agenda[] }): { key: string; value: Agenda[] }[] {
+    return Object.entries(agendasPorAno).map(([ano, lista]) => ({
+      key: ano,
+      value: lista
+    }));
   }
 
   getSituacaoLabel(valor: number): string {
