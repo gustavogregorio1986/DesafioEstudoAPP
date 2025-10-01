@@ -66,24 +66,24 @@ export class ConsultarComponent implements OnInit {
     });
   }
 
-   modoAgrupamento: 'ano' | 'mes' = 'ano'; // você pode mudar isso com um select no HTML
+  modoAgrupamento: 'ano' | 'mes' = 'ano'; // você pode mudar isso com um select no HTML
 
-atualizarAgrupamento(): void {
-  if (this.modoAgrupamento === 'mes') {
-    this.agruparPorMes();
-  } else {
-    this.agruparPorAno();
+  atualizarAgrupamento(): void {
+    if (this.modoAgrupamento === 'mes') {
+      this.agruparPorMes();
+    } else {
+      this.agruparPorAno();
+    }
   }
-}
 
   filtrarPorTexto(): void {
-  const termo = this.termoBusca?.toLowerCase() || '';
-  this.agendasFiltradas = this.agendasOriginais.filter(agenda =>
-    agenda.titulo?.toLowerCase().includes(termo) ||
-    agenda.descricao?.toLowerCase().includes(termo)
-  );
-  this.atualizarAgrupamento(); // mantém agrupamento funcionando
-}
+    const termo = this.termoBusca?.toLowerCase() || '';
+    this.agendasFiltradas = this.agendasOriginais.filter(agenda =>
+      agenda.titulo?.toLowerCase().includes(termo) ||
+      agenda.descricao?.toLowerCase().includes(termo)
+    );
+    this.atualizarAgrupamento(); // mantém agrupamento funcionando
+  }
 
   voltarMes(): void {
     this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() - 1, 1);
