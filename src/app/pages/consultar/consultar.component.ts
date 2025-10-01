@@ -23,50 +23,42 @@ import { FormsModule } from '@angular/forms';
 })
 export class ConsultarComponent implements OnInit {
 
-  agendasPorAno: { [ano: string]: Agenda[] } = {};
   agendasOriginais: Agenda[] = [];
   agendasFiltradas: Agenda[] = [];
   grupos: { key: string; value: Agenda[] }[] = [];
   agendaSelecionada: Agenda | null = null;
 
+  agendasPorAno: { [ano: string]: Agenda[] } = {};
+  agendasPorMes: { [mes: string]: Agenda[] } = {};
+
   dataInicioFiltro: string | null = null;
   dataFimFiltro: string | null = null;
+  termoBusca: string = '';
   totalRegistros: number = 0;
 
-  titulo = '';
-  dataInicio!: string; // formato yyyy-MM-dd
-  horaInicio: string = ''; // exemplo: '14:30'
-  horaFim: string = '';    // exemplo: '16:00'
-  dataFim!: string;        // formato yyyy-MM-dd
-  descricao = '';
-  enumSituacao: Situacao | null = null;
-  agendasPorMes: { [mes: string]: any[] } = {};
-  termoBusca: string = '';
+  modoAgrupamento: 'ano' | 'mes' = 'ano';
+  mesAtual: Date = new Date();
 
+  situacoes = [
+    { label: 'Ativo', value: Situacao.Ativo },
+    { label: 'Inativo', value: Situacao.Inativo },
+    { label: 'Pendente', value: Situacao.Pendente }
+  ];
 
-  mesAtual: Date = new Date(); // Começa com o mês atual
-
-  constructor(private agendaService: AgendaService) { }
+  constructor(private agendaService: AgendaService) {}
 
   ngOnInit(): void {
     this.carregarAgendas();
   }
 
-  carregarAgendas(): void {
+  private carregarAgendas(): void {
     this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
       this.agendasOriginais = agendas;
-
-      agendas.forEach(agenda => {
-        agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();
-      });
-
-      this.agendasFiltradas = [...this.agendasOriginais];
-      this.agruparPorAno();
-      this.totalRegistros = this.agendasFiltradas.length;
+      this.agendasFiltradas = [...agendas];
+      this.totalRegistros = agendas.length;
+      this.atualizarAgrupamento();
     });
   }
-
-  modoAgrupamento: 'ano' | 'mes' = 'ano'; // você pode mudar isso com um select no HTML
 
   atualizarAgrupamento(): void {
     if (this.modoAgrupamento === 'mes') {
@@ -76,23 +68,61 @@ export class ConsultarComponent implements OnInit {
     }
   }
 
+  private agruparPorAno(): void {
+    this.agendasPorAno = {};
+    this.agendasFiltradas.forEach(agenda => {
+      const ano = new Date(agenda.dataInicio).getFullYear().toString();
+      if (!this.agendasPorAno[ano]) this.agendasPorAno[ano] = [];
+      this.agendasPorAno[ano].push(agenda);
+    });
+    this.grupos = this.converterParaGrupos(this.agendasPorAno);
+  }
+
+  private agruparPorMes(): void {
+    this.agendasPorMes = {};
+    this.agendasFiltradas.forEach(agenda => {
+      const data = new Date(agenda.dataInicio);
+      const mes = `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}`;
+      if (!this.agendasPorMes[mes]) this.agendasPorMes[mes] = [];
+      this.agendasPorMes[mes].push(agenda);
+    });
+    this.grupos = this.converterParaGrupos(this.agendasPorMes);
+  }
+
+  private converterParaGrupos(obj: { [key: string]: Agenda[] }): { key: string; value: Agenda[] }[] {
+    return Object.entries(obj).map(([key, value]) => ({ key, value }));
+  }
+
   filtrarPorTexto(): void {
-    const termo = this.termoBusca?.toLowerCase() || '';
+    const termo = this.termoBusca.toLowerCase();
     this.agendasFiltradas = this.agendasOriginais.filter(agenda =>
       agenda.titulo?.toLowerCase().includes(termo) ||
       agenda.descricao?.toLowerCase().includes(termo)
     );
-    this.atualizarAgrupamento(); // mantém agrupamento funcionando
+    this.atualizarAgrupamento();
+    this.totalRegistros = this.agendasFiltradas.length;
   }
 
-  voltarMes(): void {
-    this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() - 1, 1);
-    this.filtrarPorMes(); // Atualiza os dados do mês
+  filtrarPorData(): void {
+    const inicio = this.dataInicioFiltro ? new Date(this.dataInicioFiltro + 'T00:00:00') : null;
+    const fim = this.dataFimFiltro ? new Date(this.dataFimFiltro + 'T23:59:59') : null;
+
+    this.agendasFiltradas = this.agendasOriginais.filter(agenda => {
+      const data = new Date(agenda.dataInicio);
+      return (!inicio || data >= inicio) && (!fim || data <= fim);
+    });
+
+    this.atualizarAgrupamento();
+    this.totalRegistros = this.agendasFiltradas.length;
   }
 
-  avancarMes(): void {
-    this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() + 1, 1);
-    this.filtrarPorMes(); // Atualiza os dados do mês
+  limparFiltro(): void {
+    this.dataInicioFiltro = null;
+    this.dataFimFiltro = null;
+    this.termoBusca = '';
+    this.agendasFiltradas = [...this.agendasOriginais];
+    this.atualizarAgrupamento();
+    this.totalRegistros = this.agendasFiltradas.length;
   }
 
   filtrarPorMes(): void {
@@ -104,57 +134,26 @@ export class ConsultarComponent implements OnInit {
       return data.getFullYear() === ano && data.getMonth() === mes;
     });
 
-    this.agruparPorMes(); // Atualiza os grupos
+    this.agruparPorMes();
     this.totalRegistros = this.agendasFiltradas.length;
   }
 
+  voltarMes(): void {
+    this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() - 1, 1);
+    this.filtrarPorMes();
+  }
+
+  avancarMes(): void {
+    this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() + 1, 1);
+    this.filtrarPorMes();
+  }
+
   selecionarAgenda(agenda: Agenda): void {
-    this.agendaSelecionada = { ...agenda }; // cria uma cópia para edição
-  }
-
-  scrollParaTopo(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  agruparPorMes(): void {
-    this.agendasPorMes = {};
-
-    this.agendasFiltradas.forEach(agenda => {
-      const data = new Date(agenda.dataInicio);
-      const mes = `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}`; // Ex: "2025-10"
-
-      if (!this.agendasPorMes[mes]) {
-        this.agendasPorMes[mes] = [];
-      }
-
-      this.agendasPorMes[mes].push(agenda);
-    });
-
-    this.grupos = Object.entries(this.agendasPorMes).map(([mes, lista]) => ({
-      key: mes,
-      value: lista
-    }));
-  }
-
-  gerarRelatorioGeral(): void {
-    this.agendaService.gerarRelatorioGeral().subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'relatorio-geral.pdf';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error('Erro ao gerar relatório:', err);
-        alert('Erro ao gerar relatório.');
-      }
-    });
+    this.agendaSelecionada = { ...agenda };
   }
 
   editarAgendaSelecionada(): void {
-    if (!this.agendaSelecionada || !this.agendaSelecionada.id) return;
+    if (!this.agendaSelecionada?.id) return;
 
     this.agendaService.editarAgenda(this.agendaSelecionada.id, this.agendaSelecionada).subscribe({
       next: () => {
@@ -169,62 +168,51 @@ export class ConsultarComponent implements OnInit {
     });
   }
 
-  agruparPorAno(): void {
-    this.agendasPorAno = {};
+  excluirAgenda(id: number): void {
+    if (confirm('Deseja realmente excluir esta agenda?')) {
+      this.agendaService.deletarAgenda(id).subscribe({
+        next: () => this.carregarAgendas(),
+        error: err => console.error('Erro ao excluir agenda:', err)
+      });
+    }
+  }
 
-    this.agendasFiltradas.forEach(agenda => {
-      const ano = new Date(agenda.dataInicio).getFullYear().toString();
-      if (!this.agendasPorAno[ano]) {
-        this.agendasPorAno[ano] = [];
+  gerarRelatorioGeral(): void {
+    this.agendaService.gerarRelatorioGeral().subscribe({
+      next: blob => this.baixarArquivo(blob, 'relatorio-geral.pdf'),
+      error: err => {
+        console.error('Erro ao gerar relatório:', err);
+        alert('Erro ao gerar relatório.');
       }
-      this.agendasPorAno[ano].push(agenda);
     });
-
-    this.grupos = Object.entries(this.agendasPorAno).map(([ano, lista]) => ({
-      key: ano,
-      value: lista
-    }));
   }
 
-  filtrarPorData(): void {
-    const filtroInicio = this.dataInicioFiltro
-      ? new Date(this.dataInicioFiltro + 'T00:00:00')
-      : null;
-
-    const filtroFim = this.dataFimFiltro
-      ? new Date(this.dataFimFiltro + 'T23:59:59')
-      : null;
-
-    this.agendasFiltradas = this.agendasOriginais.filter(agenda => {
-      const inicio = new Date(agenda.dataInicio);
-      return (!filtroInicio || inicio >= filtroInicio) &&
-        (!filtroFim || inicio <= filtroFim);
+  exportarExcel(): void {
+    this.agendaService.exportarExcel().subscribe({
+      next: blob => this.baixarArquivo(blob, 'agenda.xlsx'),
+      error: err => {
+        console.error('Erro ao exportar Excel:', err);
+        alert('Erro ao exportar Excel.');
+      }
     });
-
-    this.agruparPorAno();
-    this.totalRegistros = this.agendasFiltradas.length;
   }
 
-  limparFiltro(): void {
-    this.dataInicioFiltro = null;
-    this.dataFimFiltro = null;
-
-    this.agendasFiltradas = [...this.agendasOriginais];
-    this.agruparPorAno();
-    this.totalRegistros = this.agendasFiltradas.length;
+  private baixarArquivo(blob: Blob, nomeArquivo: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomeArquivo;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
-
-  situacoes: { label: string; value: Situacao }[] = [
-    { label: 'Ativo', value: Situacao.Ativo },
-    { label: 'Inativo', value: Situacao.Inativo },
-    { label: 'Pendente', value: Situacao.Pendente }
-  ];
 
   scrollParaAno(ano: string): void {
-    const elemento = document.getElementById('ano-' + ano);
-    if (elemento) {
-      elemento.scrollIntoView({ behavior: 'smooth' });
-    }
+    const el = document.getElementById('ano-' + ano);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  scrollParaTopo(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   getSituacaoLabel(valor: number): string {
@@ -238,32 +226,6 @@ export class ConsultarComponent implements OnInit {
       Pendente: 'text-primary'
     };
     return map[Situacao[valor]] ?? '';
-  }
-
-  excluirAgenda(id: number): void {
-    if (confirm('Deseja realmente excluir esta agenda?')) {
-      this.agendaService.deletarAgenda(id).subscribe({
-        next: () => this.carregarAgendas(),
-        error: (err) => console.error('Erro ao excluir agenda:', err)
-      });
-    }
-  }
-
-  exportarExcel(): void {
-    this.agendaService.exportarExcel().subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'agenda.xlsx';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error('Erro ao exportar Excel:', err);
-        alert('Erro ao exportar Excel.');
-      }
-    });
   }
 
   getLinhasPorAno(ano: string): number {
