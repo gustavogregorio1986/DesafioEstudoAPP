@@ -1,16 +1,21 @@
-<div class="container">
-   <a href="https://wa.me/5521996972628" target="_blank" class="btn btn-success">
-      <i class="bi bi-whatsapp"></i> WhatsApp
-   </a>
-   <div class="card p-3 mb-4 shadow-sm">
-    <div class="d-flex flex-wrap align-items-center">
-      <label class="me-2 fw-bold">Buscar:</label>
+<div class="container py-4">
+  <!-- Botão WhatsApp -->
+  <div class="mb-3">
+    <a href="https://wa.me/5521996972628" target="_blank" class="btn btn-success" aria-label="Abrir conversa no WhatsApp">
+      <i class="bi bi-whatsapp me-1"></i> WhatsApp
+    </a>
+  </div>
+
+  <!-- Campo de busca -->
+  <div class="card p-3 mb-4 shadow-sm">
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
       <input type="text"
              [(ngModel)]="termoBusca"
              (input)="filtrarPorTexto()"
-             class="form-control me-2"
-             style="max-width: 300px;"
-             placeholder="Digite título ou descrição">
+             class="form-control"
+             placeholder="Buscar por título ou descrição"
+             aria-label="Campo de busca">
     </div>
   </div>
 
@@ -21,27 +26,35 @@
 
   <!-- Filtro por data -->
   <div class="card p-3 mb-4 shadow-sm">
-    <div class="d-flex flex-wrap align-items-center">
-      <label class="me-2 fw-bold">De:</label>
-      <input type="date" [(ngModel)]="dataInicioFiltro" class="form-control me-2" style="max-width: 200px;">
-      <label class="me-2 fw-bold">Até:</label>
-      <input type="date" [(ngModel)]="dataFimFiltro" class="form-control me-2" style="max-width: 200px;">
-      <button class="btn btn-primary mt-2 mt-md-0 me-2" (click)="filtrarPorData()">Filtrar</button>
-      <button class="btn btn-outline-secondary mt-2 mt-md-0"
-              [disabled]="!dataInicioFiltro && !dataFimFiltro"
-              (click)="limparFiltro()">Limpar</button>
+    <div class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label fw-bold">De:</label>
+        <input type="date" [(ngModel)]="dataInicioFiltro" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label fw-bold">Até:</label>
+        <input type="date" [(ngModel)]="dataFimFiltro" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary w-100" (click)="filtrarPorData()">Filtrar</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-outline-secondary w-100"
+                [disabled]="!dataInicioFiltro && !dataFimFiltro"
+                (click)="limparFiltro()">Limpar</button>
+      </div>
     </div>
   </div>
 
   <!-- Relatório e exportação -->
-  <div class="mb-3 d-flex flex-wrap gap-2">
+  <div class="mb-4 d-flex flex-wrap gap-2">
     <button class="btn btn-info" (click)="gerarRelatorioGeral()">📄 Gerar Relatório Geral</button>
     <button class="btn btn-success" (click)="exportarExcel()">📊 Exportar para Excel</button>
   </div>
 
   <!-- Mensagem de vazio -->
-  <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning">
-    Nenhum registro encontrado para o intervalo selecionado.
+  <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning fade show" role="alert">
+    ⚠️ Nenhum registro encontrado para o intervalo selecionado.
   </div>
 
   <!-- Navegação por mês -->
@@ -53,7 +66,7 @@
 
   <!-- Navegação por ano -->
   <div class="mb-4">
-    <h5>Navegar por ano:</h5>
+    <h2 class="text-uppercase fw-semibold">Navegar por ano</h2>
     <div class="d-flex flex-wrap">
       <button *ngFor="let grupo of agendasPorAno | keyvalue"
               class="btn btn-outline-primary me-2 mb-2"
@@ -66,7 +79,7 @@
   <!-- Cards resumo por ano -->
   <div class="row">
     <div class="col-md-4" *ngFor="let grupo of agendasPorAno | keyvalue">
-      <div class="card text-center mb-3">
+      <div class="card text-center mb-3 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">{{ grupo.key }}</h5>
           <p class="card-text">{{ grupo.value.length }} registros</p>
@@ -79,18 +92,18 @@
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div *ngFor="let grupo of agendasPorAno | keyvalue">
-        <h4 class="mt-5" [attr.id]="'ano-' + grupo.key">
+        <h3 class="mt-5" [attr.id]="'ano-' + grupo.key">
           Ano: {{ grupo.key }} ({{ grupo.value.length }} registros)
-        </h4>
+        </h3>
 
         <div class="table-responsive">
-          <table class="table table-bordered table-striped">
-            <thead>
+          <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
               <tr>
                 <th>Título</th>
                 <th>Descrição</th>
-                <th>Início</th>
-                <th>Fim</th>
+                <th class="text-nowrap">Início</th>
+                <th class="text-nowrap">Fim</th>
                 <th>Situação</th>
                 <th>Ações</th>
               </tr>
@@ -104,22 +117,24 @@
                 <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
                   {{ getSituacaoLabel(agenda.enumSituacao) }}
                 </td>
-                <td>
-                  <button class="btn btn-danger btn-sm"
-                          (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null">
-                    🗑️ Excluir
+                <td class="text-nowrap">
+                  <button class="btn btn-danger btn-sm me-1"
+                          (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null"
+                          aria-label="Excluir agenda">
+                    🗑️
                   </button>
                   <button class="btn btn-warning btn-sm"
                           data-bs-toggle="modal"
                           [attr.data-bs-target]="'#modal-editar-' + agenda.id"
-                          (click)="selecionarAgenda(agenda)">
-                    ✏️ Editar
+                          (click)="selecionarAgenda(agenda)"
+                          aria-label="Editar agenda">
+                    ✏️
                   </button>
 
                   <!-- Modal de edição -->
                   <div class="modal fade" [id]="'modal-editar-' + agenda.id" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
-                      <div class="modal-content">
+                      <form (ngSubmit)="editarAgendaSelecionada()" class="modal-content">
                         <div class="modal-header">
                           <h5 class="modal-title">Editar Agenda</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
@@ -129,17 +144,16 @@
                           <input [(ngModel)]="agendaSelecionada.dataInicio" name="dataInicio" type="datetime-local" class="form-control mb-2">
                           <input [(ngModel)]="agendaSelecionada.dataFim" name="dataFim" type="datetime-local" class="form-control mb-2">
                           <textarea [(ngModel)]="agendaSelecionada.descricao" name="descricao" class="form-control mb-2" placeholder="Descrição"></textarea>
-
                           <select [(ngModel)]="agendaSelecionada.enumSituacao" name="enumSituacao" required class="form-select mb-3">
                             <option [ngValue]="null">Selecione uma situação</option>
                             <option *ngFor="let s of situacoes" [ngValue]="s.value">{{ s.label }}</option>
                           </select>
                         </div>
                         <div class="modal-footer">
-                          <button class="btn btn-success" (click)="editarAgendaSelecionada()" data-bs-dismiss="modal">Salvar</button>
-                          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <button type="submit" class="btn btn-success">Salvar</button>
+                          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </td>
@@ -152,11 +166,10 @@
           <button class="btn btn-outline-primary" (click)="scrollParaTopo()">
             🔙 Ver todos os anos, voltar ao topo
           </button>
-          
         </div>
       </div>
     </div>
   </div>
 
-  <app-footer class="footer-expand"></app-footer>
+  <app-footer class="footer-expand mt-5"></app-footer>
 </div>

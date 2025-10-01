@@ -1,21 +1,25 @@
-<div class="container mt-4">
-  <p class="fw-bold text-success mb-3">
-    Total geral de registros ativos: {{ totalRegistros }}
+<div class="container py-4">
+  <!-- Total de registros -->
+  <p class="fw-bold text-warning mb-3">
+    ⏳ Total geral de registros pendentes: {{ totalRegistros }}
   </p>
 
+  <!-- Listagem agrupada por chave -->
   <div *ngFor="let grupo of grupos" class="mb-5">
-    <h4 class="text-primary">{{ grupo.key }} ({{ grupo.value.length }}) Pendentes</h4>
+    <h2 class="text-primary fw-semibold mb-3">
+      {{ grupo.key }} ({{ grupo.value.length }}) Pendentes
+    </h2>
 
     <div class="table-responsive">
-      <table class="table table-bordered table-striped align-middle">
+      <table class="table table-bordered table-striped table-hover align-middle">
         <thead class="table-dark">
           <tr>
-            <th>#</th>
-            <th>Título</th>
-            <th>Descrição</th>
-            <th>Início</th>
-            <th>Fim</th>
-            <th>Situação</th>
+            <th scope="col">#</th>
+            <th scope="col">Título</th>
+            <th scope="col">Descrição</th>
+            <th scope="col" class="text-nowrap">Início</th>
+            <th scope="col" class="text-nowrap">Fim</th>
+            <th scope="col">Situação</th>
           </tr>
         </thead>
         <tbody>
@@ -23,8 +27,8 @@
             <td>{{ i + 1 }}</td>
             <td>{{ agenda.titulo }}</td>
             <td>{{ agenda.descricao }}</td>
-            <td>{{ agenda.dataInicio | date:'short' }}</td>
-            <td>{{ agenda.dataFim | date:'short' }}</td>
+            <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ agenda.dataFim | date:'dd/MM/yyyy HH:mm' }}</td>
             <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
               {{ getSituacaoLabel(agenda.enumSituacao) }}
             </td>
@@ -34,5 +38,6 @@
     </div>
   </div>
 
-  <app-footer class="footer-expand"></app-footer>
+  <!-- Rodapé -->
+  <app-footer class="footer-expand mt-5"></app-footer>
 </div>
