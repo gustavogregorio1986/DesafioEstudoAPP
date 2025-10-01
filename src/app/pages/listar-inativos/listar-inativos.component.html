@@ -2,7 +2,9 @@
   <p class="fw-bold text-success mb-3">
     Total geral de registros ativos: {{ totalRegistros }}
   </p>
-
+  <a href="https://wa.me/5521996972628" target="_blank" class="btn btn-success">
+       <i class="bi bi-whatsapp"></i> WhatsApp
+      </a>
   <div *ngFor="let grupo of grupos" class="mb-5">
     <h4 class="text-primary">{{ grupo.key }} ({{ grupo.value.length }}) Inativos</h4>
 
