@@ -41,6 +41,7 @@ export class ConsultarComponent implements OnInit {
   descricao = '';
   enumSituacao: Situacao | null = null;
   agendasPorMes: { [mes: string]: any[] } = {};
+  termoBusca: string = '';
 
 
   mesAtual: Date = new Date(); // Começa com o mês atual
@@ -64,6 +65,25 @@ export class ConsultarComponent implements OnInit {
       this.totalRegistros = this.agendasFiltradas.length;
     });
   }
+
+   modoAgrupamento: 'ano' | 'mes' = 'ano'; // você pode mudar isso com um select no HTML
+
+atualizarAgrupamento(): void {
+  if (this.modoAgrupamento === 'mes') {
+    this.agruparPorMes();
+  } else {
+    this.agruparPorAno();
+  }
+}
+
+  filtrarPorTexto(): void {
+  const termo = this.termoBusca?.toLowerCase() || '';
+  this.agendasFiltradas = this.agendasOriginais.filter(agenda =>
+    agenda.titulo?.toLowerCase().includes(termo) ||
+    agenda.descricao?.toLowerCase().includes(termo)
+  );
+  this.atualizarAgrupamento(); // mantém agrupamento funcionando
+}
 
   voltarMes(): void {
     this.mesAtual = new Date(this.mesAtual.getFullYear(), this.mesAtual.getMonth() - 1, 1);

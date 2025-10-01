@@ -1,5 +1,17 @@
 <div class="container">
 
+   <div class="card p-3 mb-4 shadow-sm">
+    <div class="d-flex flex-wrap align-items-center">
+      <label class="me-2 fw-bold">Buscar:</label>
+      <input type="text"
+             [(ngModel)]="termoBusca"
+             (input)="filtrarPorTexto()"
+             class="form-control me-2"
+             style="max-width: 300px;"
+             placeholder="Digite título ou descrição">
+    </div>
+  </div>
+
   <!-- Total de registros -->
   <p class="fw-bold text-primary mb-3">
     Total geral de registros: {{ agendasFiltradas.length }}
