@@ -1,4 +1,6 @@
 <div class="container">
+
+  <!-- Total de registros -->
   <p class="fw-bold text-primary mb-3">
     Total geral de registros: {{ agendasFiltradas.length }}
   </p>
@@ -17,21 +19,22 @@
     </div>
   </div>
 
-  <!-- Botão para gerar relatório geral -->
-  <div class="mb-3">
-    <button class="btn btn-info" (click)="gerarRelatorioGeral()">
-      📄 Gerar Relatório Geral
-    </button>
-  </div>
-  <div class="mb-3">
-    <button class="btn btn-success mb-3" (click)="exportarExcel()">
-           📊 Exportar para Excel
-    </button>
+  <!-- Relatório e exportação -->
+  <div class="mb-3 d-flex flex-wrap gap-2">
+    <button class="btn btn-info" (click)="gerarRelatorioGeral()">📄 Gerar Relatório Geral</button>
+    <button class="btn btn-success" (click)="exportarExcel()">📊 Exportar para Excel</button>
   </div>
 
-  <!-- Mensagem se não houver registros -->
+  <!-- Mensagem de vazio -->
   <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning">
     Nenhum registro encontrado para o intervalo selecionado.
+  </div>
+
+  <!-- Navegação por mês -->
+  <div class="navegacao-mes mb-4 d-flex align-items-center gap-3">
+    <button (click)="voltarMes()" class="btn btn-outline-secondary">◀ Mês anterior</button>
+    <span class="fw-bold">{{ mesAtual | date: 'MMMM yyyy' }}</span>
+    <button (click)="avancarMes()" class="btn btn-outline-secondary">Próximo mês ▶</button>
   </div>
 
   <!-- Navegação por ano -->
@@ -45,7 +48,6 @@
       </button>
     </div>
   </div>
-  
 
   <!-- Cards resumo por ano -->
   <div class="row">
@@ -66,76 +68,75 @@
         <h4 class="mt-5" [attr.id]="'ano-' + grupo.key">
           Ano: {{ grupo.key }} ({{ grupo.value.length }} registros)
         </h4>
-        <table class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Título</th>
-              <th>Descrição</th>
-              <th>Início</th>
-              <th>Fim</th>
-              <th>Situação</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-          <div class="navegacao-mes" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-             <button (click)="voltarMes()">◀ Mês anterior</button>
-             <span style="font-weight: bold;">{{ mesAtual | date: 'MMMM yyyy' }}</span>
-             <button (click)="avancarMes()">Próximo mês ▶</button>
-          </div>
-            <tr *ngFor="let agenda of grupo.value">
-              <td>{{ agenda.titulo }}</td>
-              <td>{{ agenda.descricao }}</td>
-              <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
-              <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-                {{ getSituacaoLabel(agenda.enumSituacao) }}
-              </td>
-              <td>
-                <button class="btn btn-danger btn-sm"
-                        (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null">
-                  Excluir
-                </button>
-                <button class="btn btn-warning btn-sm"
-                        data-bs-toggle="modal"
-                        [attr.data-bs-target]="'#modal-editar-' + agenda.id"
-                        (click)="selecionarAgenda(agenda)">
-                  Editar
-                </button>
 
-                <!-- Modal de edição -->
-                <div class="modal fade" [id]="'modal-editar-' + agenda.id" tabindex="-1" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Editar Agenda</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                      </div>
-                      <div class="modal-body" *ngIf="agendaSelecionada">
-                        <input [(ngModel)]="agendaSelecionada.titulo" name="titulo" class="form-control mb-2" placeholder="Título">
-                        <input [(ngModel)]="agendaSelecionada.dataInicio" name="dataInicio" type="datetime-local" class="form-control mb-2">
-                        <input [(ngModel)]="agendaSelecionada.dataFim" name="dataFim" type="datetime-local" class="form-control mb-2">
-                        <textarea [(ngModel)]="agendaSelecionada.descricao" name="descricao" class="form-control mb-2" placeholder="Descrição"></textarea>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th>Início</th>
+                <th>Fim</th>
+                <th>Situação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let agenda of grupo.value">
+                <td>{{ agenda.titulo }}</td>
+                <td>{{ agenda.descricao }}</td>
+                <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+                <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+                  {{ getSituacaoLabel(agenda.enumSituacao) }}
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-sm"
+                          (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null">
+                    🗑️ Excluir
+                  </button>
+                  <button class="btn btn-warning btn-sm"
+                          data-bs-toggle="modal"
+                          [attr.data-bs-target]="'#modal-editar-' + agenda.id"
+                          (click)="selecionarAgenda(agenda)">
+                    ✏️ Editar
+                  </button>
 
-                        <select [(ngModel)]="agendaSelecionada.enumSituacao" name="enumSituacao" required class="form-select mb-3">
-                          <option [ngValue]="null">Selecione uma situação</option>
-                          <option *ngFor="let s of situacoes" [ngValue]="s.value">{{ s.label }}</option>
-                        </select>
-                      </div>
-                      <div class="modal-footer">
-                        <button class="btn btn-success" (click)="editarAgendaSelecionada()" data-bs-dismiss="modal">Salvar</button>
-                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <!-- Modal de edição -->
+                  <div class="modal fade" [id]="'modal-editar-' + agenda.id" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Editar Agenda</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body" *ngIf="agendaSelecionada">
+                          <input [(ngModel)]="agendaSelecionada.titulo" name="titulo" class="form-control mb-2" placeholder="Título">
+                          <input [(ngModel)]="agendaSelecionada.dataInicio" name="dataInicio" type="datetime-local" class="form-control mb-2">
+                          <input [(ngModel)]="agendaSelecionada.dataFim" name="dataFim" type="datetime-local" class="form-control mb-2">
+                          <textarea [(ngModel)]="agendaSelecionada.descricao" name="descricao" class="form-control mb-2" placeholder="Descrição"></textarea>
+
+                          <select [(ngModel)]="agendaSelecionada.enumSituacao" name="enumSituacao" required class="form-select mb-3">
+                            <option [ngValue]="null">Selecione uma situação</option>
+                            <option *ngFor="let s of situacoes" [ngValue]="s.value">{{ s.label }}</option>
+                          </select>
+                        </div>
+                        <div class="modal-footer">
+                          <button class="btn btn-success" (click)="editarAgendaSelecionada()" data-bs-dismiss="modal">Salvar</button>
+                          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <div class="text-center mt-3">
           <button class="btn btn-outline-primary" (click)="scrollParaTopo()">
-             🔙 Ver todos os anos, voltar ao topo
+            🔙 Ver todos os anos, voltar ao topo
           </button>
         </div>
       </div>
