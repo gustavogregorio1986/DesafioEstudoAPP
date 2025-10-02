@@ -1,36 +1,53 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand">
-      <i class="bi bi-globe2 me-2"></i> Desafio Angular
+    <!-- Logo e título -->
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+      <i class="bi bi-globe2 fs-4"></i>
+      <span class="fw-bold fs-5">Desafio Angular</span>
     </a>
 
+    <!-- Botão responsivo -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
-      aria-controls="menuPrincipal" aria-expanded="false" aria-label="Toggle navigation">
+            aria-controls="menuPrincipal" aria-expanded="false" aria-label="Alternar navegação">
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Menu principal -->
     <div class="collapse navbar-collapse" id="menuPrincipal">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item" routerLinkActive="active" [routerLink]="['/']">
-          <a class="nav-link" ><i class="bi bi-pencil-square me-1"></i> Home</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link d-flex align-items-center gap-1" [routerLink]="['/']">
+            <i class="bi bi-house-door"></i> Home
+          </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLink]="['/cadastro']">
-          <a class="nav-link" ><i class="bi bi-pencil-square me-1"></i> Cadastrar</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link d-flex align-items-center gap-1" [routerLink]="['/cadastro']">
+            <i class="bi bi-pencil-square"></i> Cadastrar
+          </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLink]="['/consulta']">
-          <a class="nav-link" ><i class="bi bi-search me-1"></i> Consultar</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link d-flex align-items-center gap-1" [routerLink]="['/consulta']">
+            <i class="bi bi-search"></i> Consultar
+          </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLink]="['/listar-ativos']">
-          <a class="nav-link"><i class="bi bi-check-circle me-1"></i> Ativos</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link d-flex align-items-center gap-1" [routerLink]="['/listar-ativos']">
+            <i class="bi bi-check-circle"></i> Ativos
+          </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLink]="['/listar-inativos']">
-          <a class="nav-link"><i class="bi bi-x-circle me-1"></i> Inativos</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link d-flex align-items-center gap-1" [routerLink]="['/listar-inativos']">
+            <i class="bi bi-x-circle"></i> Inativos
+          </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLink]="['/listar-pedenetes']">
-          <a class="nav-link" ><i class="bi bi-clock me-1"></i> Pendentes</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link d-flex align-items-center gap-1" [routerLink]="['/listar-pendentes']">
+            <i class="bi bi-clock"></i> Pendentes
+          </a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+
 <router-outlet></router-outlet>

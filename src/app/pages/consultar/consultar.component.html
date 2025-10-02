@@ -1,15 +1,15 @@
-<div class="container py-4">
-  <!-- Botão WhatsApp -->
-  <div class="mb-3">
-    <a href="https://wa.me/5521996972628" target="_blank" class="btn btn-success">
-      <i class="bi bi-whatsapp me-1"></i> WhatsApp
+<div class="container-fluid py-5 px-4 bg-light rounded-4 shadow-lg">
+  <!-- WhatsApp -->
+  <div class="mb-4">
+    <a href="https://wa.me/5521996972628" target="_blank" class="btn btn-success btn-lg d-flex align-items-center gap-2">
+      <i class="bi bi-whatsapp fs-4"></i> <span>Fale pelo WhatsApp</span>
     </a>
   </div>
 
-  <!-- Campo de busca -->
-  <div class="card p-3 mb-4 shadow-sm">
-    <div class="input-group">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
+  <!-- Busca -->
+  <div class="card p-4 mb-4 border-0 rounded-4 shadow-sm">
+    <div class="input-group input-group-lg">
+      <span class="input-group-text bg-white"><i class="bi bi-search fs-5 text-muted"></i></span>
       <input type="text"
              [(ngModel)]="termoBusca"
              (input)="filtrarPorTexto()"
@@ -18,85 +18,91 @@
     </div>
   </div>
 
-  <!-- Total de registros -->
-  <p class="fw-bold text-primary mb-3">
+  <!-- Total -->
+  <p class="fw-bold text-primary fs-5 mb-4">
     Total geral de registros: {{ agendasFiltradas.length }}
   </p>
 
   <!-- Filtro por data -->
-  <div class="card p-3 mb-4 shadow-sm">
-    <div class="row g-2 align-items-end">
+  <div class="card p-4 mb-5 border-0 rounded-4 shadow-sm">
+    <div class="row g-3 align-items-end">
       <div class="col-md-3">
-        <label class="form-label fw-bold">De:</label>
+        <label class="form-label fw-semibold text-muted">De:</label>
         <input type="date" [(ngModel)]="dataInicioFiltro" class="form-control">
       </div>
       <div class="col-md-3">
-        <label class="form-label fw-bold">Até:</label>
+        <label class="form-label fw-semibold text-muted">Até:</label>
         <input type="date" [(ngModel)]="dataFimFiltro" class="form-control">
       </div>
       <div class="col-md-3">
-        <button class="btn btn-primary w-100" (click)="filtrarPorData()">Filtrar</button>
+        <button class="btn btn-primary w-100 btn-lg" (click)="filtrarPorData()">Filtrar</button>
       </div>
       <div class="col-md-3">
-        <button class="btn btn-outline-secondary w-100"
+        <button class="btn btn-outline-secondary w-100 btn-lg"
                 [disabled]="!dataInicioFiltro && !dataFimFiltro"
                 (click)="limparFiltro()">Limpar</button>
       </div>
     </div>
   </div>
 
-  <!-- Relatório e exportação -->
-  <div class="mb-4 d-flex flex-wrap gap-2">
-    <button class="btn btn-info" (click)="gerarRelatorioGeral()">📄 Gerar Relatório Geral</button>
-    <button class="btn btn-success" (click)="exportarExcel()">📊 Exportar para Excel</button>
+  <!-- Relatórios -->
+  <div class="mb-5 d-flex flex-wrap gap-3">
+    <button class="btn btn-info btn-lg d-flex align-items-center gap-2" (click)="gerarRelatorioGeral()">
+      <i class="bi bi-file-earmark-text"></i> Relatório Geral
+    </button>
+    <button class="btn btn-success btn-lg d-flex align-items-center gap-2" (click)="exportarExcel()">
+      <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+    </button>
   </div>
 
-  <!-- Mensagem de vazio -->
-  <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning" role="alert">
+  <!-- Vazio -->
+  <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning fs-5" role="alert">
     ⚠️ Nenhum registro encontrado para o intervalo selecionado.
   </div>
 
+  <hr class="my-5 opacity-50">
+
   <!-- Navegação por mês -->
-  <div class="navegacao-mes mb-4 d-flex align-items-center gap-3">
-    <button (click)="voltarMes()" class="btn btn-outline-secondary">◀ Mês anterior</button>
-    <span class="fw-bold">{{ mesAtual | date: 'MMMM yyyy' }}</span>
-    <button (click)="avancarMes()" class="btn btn-outline-secondary">Próximo mês ▶</button>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <button (click)="voltarMes()" class="btn btn-outline-secondary btn-lg">◀ Mês anterior</button>
+    <span class="fw-bold fs-4 text-muted">{{ mesAtual | date: 'MMMM yyyy' }}</span>
+    <button (click)="avancarMes()" class="btn btn-outline-secondary btn-lg">Próximo mês ▶</button>
   </div>
 
   <!-- Navegação por ano -->
-  <div class="mb-4">
-    <h2 class="text-uppercase fw-semibold">Navegar por ano</h2>
-    <div class="d-flex flex-wrap">
+  <div class="mb-5">
+    <h2 class="text-uppercase fw-semibold fs-4 text-muted">Navegar por ano</h2>
+    <div class="d-flex flex-wrap gap-2">
       <button *ngFor="let grupo of agendasPorAno | keyvalue"
-              class="btn btn-outline-primary me-2 mb-2"
+              class="btn btn-outline-primary btn-lg"
               (click)="scrollParaAno(grupo.key)">
         {{ grupo.key }}
       </button>
     </div>
   </div>
 
-  <!-- Cards resumo por ano -->
-  <div class="row">
-    <div class="col-md-4" *ngFor="let grupo of agendasPorAno | keyvalue">
-      <div class="card text-center mb-3 shadow-sm">
+  <!-- Cards resumo -->
+  <div class="row row-cols-auto g-4 mb-5">
+    <div class="col" *ngFor="let grupo of agendasPorAno | keyvalue">
+      <div class="card text-center border-0 rounded-4 shadow-sm bg-white">
         <div class="card-body">
-          <h5 class="card-title">{{ grupo.key }}</h5>
-          <p class="card-text">{{ grupo.value.length }} registros</p>
+          <h5 class="card-title text-uppercase text-muted">{{ grupo.key }}</h5>
+          <p class="card-text fs-5">{{ grupo.value.length }} registros</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Tabelas agrupadas por ano -->
+  <!-- Tabelas -->
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div *ngFor="let grupo of agendasPorAno | keyvalue">
-        <h3 class="mt-5" [attr.id]="'ano-' + grupo.key">
+        <h3 class="mt-5 text-uppercase text-muted fs-4" [attr.id]="'ano-' + grupo.key">
           Ano: {{ grupo.key }} ({{ grupo.value.length }} registros)
         </h3>
 
-        <div class="table-responsive">
-          <table class="table table-bordered table-striped table-hover">
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered table-striped table-hover align-middle">
             <thead class="table-light">
               <tr>
                 <th>Título</th>
@@ -117,14 +123,10 @@
                   {{ getSituacaoLabel(agenda.enumSituacao) }}
                 </td>
                 <td class="text-nowrap">
-                  <button class="btn btn-danger btn-sm me-1"
-                          (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null">
+                  <button class="btn btn-danger btn-sm me-2" (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null">
                     🗑️
                   </button>
-                  <button class="btn btn-warning"
-                          (click)="selecionarAgenda(agenda)"
-                          data-bs-toggle="modal"
-                          data-bs-target="#modal-editar">
+                  <button class="btn btn-warning btn-sm" (click)="selecionarAgenda(agenda)" data-bs-toggle="modal" data-bs-target="#modal-editar">
                     ✏️ Editar
                   </button>
                 </td>
@@ -133,59 +135,12 @@
           </table>
         </div>
 
-        <div class="text-center mt-3">
-          <button class="btn btn-outline-primary" (click)="scrollParaTopo()">
+        <div class="text-center mt-4">
+          <button class="btn btn-outline-primary btn-lg" (click)="scrollParaTopo()">
             🔙 Ver todos os anos, voltar ao topo
           </button>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Modal de edição (fora do *ngFor) -->
-  <div class="modal fade" id="modal-editar" tabindex="-1">
-    <div class="modal-dialog">
-      <form class="modal-content" (ngSubmit)="editarAgendaSelecionada()" *ngIf="agendaSelecionada">
-        <div class="modal-header">
-          <h5 class="modal-title">Editar Agenda</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <input [(ngModel)]="agendaSelecionada.titulo"
-                 name="titulo"
-                 [ngModelOptions]="{standalone: true}"
-                 class="form-control mb-2" />
-
-          <textarea [(ngModel)]="agendaSelecionada.descricao"
-                    name="descricao"
-                    [ngModelOptions]="{standalone: true}"
-                    class="form-control mb-2"></textarea>
-
-          <input [(ngModel)]="agendaSelecionada.dataInicio"
-                 name="dataInicio"
-                 [ngModelOptions]="{standalone: true}"
-                 type="datetime-local"
-                 class="form-control mb-2" />
-
-          <input [(ngModel)]="agendaSelecionada.dataFim"
-                 name="dataFim"
-                 [ngModelOptions]="{standalone: true}"
-                 type="datetime-local"
-                 class="form-control mb-2" />
-
-          <select [(ngModel)]="agendaSelecionada.enumSituacao"
-                  name="enumSituacao"
-                  [ngModelOptions]="{standalone: true}"
-                  class="form-select mb-2">
-            <option [value]="null">Selecione uma situação</option>
-            <option *ngFor="let s of situacoes" [value]="s.value">{{ s.label }}</option>
-          </select>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Salvar</button>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </form>
     </div>
   </div>
 

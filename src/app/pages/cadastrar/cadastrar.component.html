@@ -1,78 +1,94 @@
-<div class="container mt-4 mb-5">
-  <h1 class="mb-4 fw-bold">Cadastro de Agenda</h1>
+<div class="container mt-5 mb-5">
+  <h1 class="mb-4 fw-bold text-primary text-center">
+    <i class="bi bi-calendar-plus me-2"></i> Cadastro de Agenda
+  </h1>
 
-  <form #formAgenda="ngForm" (ngSubmit)="salvar(formAgenda)" novalidate>
+  <form #formAgenda="ngForm" (ngSubmit)="salvar(formAgenda)" novalidate class="needs-validation">
 
-    <fieldset class="border p-3 mb-4">
-      <legend class="float-none w-auto px-2 fw-semibold">Informações da Agenda</legend>
+    <fieldset class="border rounded-4 p-4 mb-5 shadow-sm bg-light">
+      <legend class="float-none w-auto px-3 fw-semibold text-muted fs-5">Informações da Agenda</legend>
 
       <!-- Título -->
-      <label for="titulo" class="form-label">Título</label>
-      <input id="titulo" [(ngModel)]="titulo" name="titulo" required class="form-control mb-3" placeholder="Título da agenda">
+      <div class="mb-4">
+        <label for="titulo" class="form-label fw-semibold">Título</label>
+        <input id="titulo" [(ngModel)]="titulo" name="titulo" required
+               class="form-control form-control-lg"
+               placeholder="Título da agenda">
+      </div>
 
       <!-- Data e Hora de Início -->
-      <div class="row">
+      <div class="row g-4">
         <div class="col-md-6">
-          <label for="dataInicio" class="form-label">Data de Início</label>
-          <input id="dataInicio" [(ngModel)]="dataInicio" name="dataInicio" type="date" required class="form-control mb-3">
+          <label for="dataInicio" class="form-label fw-semibold">Data de Início</label>
+          <input id="dataInicio" [(ngModel)]="dataInicio" name="dataInicio" type="date" required
+                 class="form-control form-control-lg">
         </div>
         <div class="col-md-6">
-          <label for="horaInicio" class="form-label">Hora de Início</label>
+          <label for="horaInicio" class="form-label fw-semibold">Hora de Início</label>
           <input id="horaInicio" [(ngModel)]="horaInicio" name="horaInicio" type="time"
                  [required]="!diaInteiroSelecionado"
-                 class="form-control mb-3">
+                 class="form-control form-control-lg">
         </div>
       </div>
 
       <!-- Checkbox Dia inteiro -->
-      <div class="form-check mb-3">
+      <div class="form-check form-switch mt-4 mb-4">
         <input class="form-check-input" type="checkbox"
                [(ngModel)]="diaInteiroSelecionado"
                id="diaInteiroCheck" name="diaInteiro">
-        <label class="form-check-label" for="diaInteiroCheck">
-          Dia inteiro
+        <label class="form-check-label fw-semibold" for="diaInteiroCheck">
+          Evento de dia inteiro
         </label>
       </div>
 
       <!-- Data e Hora de Fim -->
-      <div class="row">
+      <div class="row g-4">
         <div class="col-md-6">
-          <label for="dataFim" class="form-label">Data de Fim</label>
-          <input id="dataFim" [(ngModel)]="dataFim" name="dataFim" type="date" required class="form-control mb-3">
+          <label for="dataFim" class="form-label fw-semibold">Data de Fim</label>
+          <input id="dataFim" [(ngModel)]="dataFim" name="dataFim" type="date" required
+                 class="form-control form-control-lg">
         </div>
         <div class="col-md-6" *ngIf="!diaInteiroSelecionado">
-          <label for="horaFim" class="form-label">Hora de Fim</label>
+          <label for="horaFim" class="form-label fw-semibold">Hora de Fim</label>
           <input id="horaFim" type="time" name="horaFim"
                  [(ngModel)]="horaFim"
                  [required]="!diaInteiroSelecionado"
-                 class="form-control mb-3">
+                 class="form-control form-control-lg">
         </div>
       </div>
 
       <!-- Descrição -->
-      <label for="descricao" class="form-label">Descrição</label>
-      <textarea id="descricao" [(ngModel)]="descricao" name="descricao" required
-                class="form-control mb-3" rows="3" placeholder="Descreva o evento..."></textarea>
+      <div class="mt-4 mb-4">
+        <label for="descricao" class="form-label fw-semibold">Descrição</label>
+        <textarea id="descricao" [(ngModel)]="descricao" name="descricao" required
+                  class="form-control form-control-lg" rows="4"
+                  placeholder="Descreva o evento com detalhes..."></textarea>
+      </div>
 
       <!-- Situação -->
-      <label for="enumSituacao" class="form-label">Situação</label>
-      <select id="enumSituacao" [(ngModel)]="enumSituacao" name="enumSituacao" required class="form-select mb-4">
-        <option [ngValue]="null">Selecione uma situação</option>
-        <option *ngFor="let s of situacoes" [ngValue]="s.value">{{ s.label }}</option>
-      </select>
+      <div class="mb-4">
+        <label for="enumSituacao" class="form-label fw-semibold">Situação</label>
+        <select id="enumSituacao" [(ngModel)]="enumSituacao" name="enumSituacao" required
+                class="form-select form-select-lg">
+          <option [ngValue]="null">Selecione uma situação</option>
+          <option *ngFor="let s of situacoes" [ngValue]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
     </fieldset>
 
     <!-- Botão de envio -->
-    <button type="submit" class="btn btn-primary">
-      <i class="bi bi-check-circle me-1"></i> Cadastrar
-    </button>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary btn-lg px-5">
+        <i class="bi bi-check-circle me-2"></i> Cadastrar Agenda
+      </button>
+    </div>
   </form>
 
   <!-- Feedback visual -->
-  <div *ngIf="sucesso" class="alert alert-success mt-4 fade show" role="alert">
+  <div *ngIf="sucesso" class="alert alert-success mt-5 fade show text-center fs-5" role="alert">
     ✅ Cadastro realizado com sucesso!
   </div>
-  <div *ngIf="erro" class="alert alert-danger mt-4 fade show" role="alert">
+  <div *ngIf="erro" class="alert alert-danger mt-5 fade show text-center fs-5" role="alert">
     ⚠️ Erro ao cadastrar. Tente novamente.
   </div>
 </div>

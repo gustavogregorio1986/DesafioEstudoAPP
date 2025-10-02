@@ -1,25 +1,27 @@
-<div class="container py-4">
+<div class="container py-5">
   <!-- Total de registros -->
-  <p class="fw-bold text-success mb-3">
+  <p class="fw-bold text-success fs-5 mb-4">
     ✅ Total geral de registros ativos: {{ totalRegistros }}
   </p>
 
   <!-- Botão WhatsApp -->
-  <div class="mb-4">
-    <a href="https://wa.me/5521996972628" target="_blank" class="btn btn-success" aria-label="Abrir conversa no WhatsApp">
-      <i class="bi bi-whatsapp me-1"></i> WhatsApp
+  <div class="mb-5 text-center">
+    <a href="https://wa.me/5521996972628" target="_blank"
+       class="btn btn-success btn-lg d-inline-flex align-items-center gap-2"
+       aria-label="Abrir conversa no WhatsApp">
+      <i class="bi bi-whatsapp fs-4"></i> <span>Fale pelo WhatsApp</span>
     </a>
   </div>
 
   <!-- Listagem agrupada -->
   <div *ngFor="let grupo of grupos" class="mb-5">
-    <h2 class="text-primary fw-semibold mb-3">
-      {{ grupo.key }} ({{ grupo.value.length }}) ativos
+    <h2 class="text-primary fw-semibold fs-4 mb-3 border-bottom pb-2">
+      {{ grupo.key }} <span class="badge bg-secondary">{{ grupo.value.length }} ativos</span>
     </h2>
 
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped table-hover align-middle">
-        <thead class="table-dark">
+    <div class="table-responsive shadow-sm rounded-3">
+      <table class="table table-bordered table-hover align-middle mb-0">
+        <thead class="table-dark text-center">
           <tr>
             <th scope="col">#</th>
             <th scope="col">Título</th>
@@ -31,13 +33,15 @@
         </thead>
         <tbody>
           <tr *ngFor="let agenda of grupo.value; let i = index">
-            <td>{{ i + 1 }}</td>
+            <td class="text-center">{{ i + 1 }}</td>
             <td>{{ agenda.titulo }}</td>
             <td>{{ agenda.descricao }}</td>
             <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ agenda.dataFim | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-              {{ getSituacaoLabel(agenda.enumSituacao) }}
+            <td class="text-center" [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+              <span class="badge bg-info text-dark">
+                {{ getSituacaoLabel(agenda.enumSituacao) }}
+              </span>
             </td>
           </tr>
         </tbody>

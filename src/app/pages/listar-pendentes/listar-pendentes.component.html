@@ -1,18 +1,19 @@
-<div class="container py-4">
+<div class="container py-5">
   <!-- Total de registros -->
-  <p class="fw-bold text-warning mb-3">
+  <p class="fw-bold text-warning fs-5 mb-4">
     ⏳ Total geral de registros pendentes: {{ totalRegistros }}
   </p>
 
   <!-- Listagem agrupada por chave -->
   <div *ngFor="let grupo of grupos" class="mb-5">
-    <h2 class="text-primary fw-semibold mb-3">
-      {{ grupo.key }} ({{ grupo.value.length }}) Pendentes
+    <h2 class="text-primary fw-semibold fs-4 mb-3 border-bottom pb-2">
+      {{ grupo.key }}
+      <span class="badge bg-warning text-dark ms-2">{{ grupo.value.length }} pendentes</span>
     </h2>
 
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped table-hover align-middle">
-        <thead class="table-dark">
+    <div class="table-responsive shadow-sm rounded-3">
+      <table class="table table-bordered table-hover align-middle mb-0">
+        <thead class="table-dark text-center">
           <tr>
             <th scope="col">#</th>
             <th scope="col">Título</th>
@@ -24,13 +25,15 @@
         </thead>
         <tbody>
           <tr *ngFor="let agenda of grupo.value; let i = index">
-            <td>{{ i + 1 }}</td>
+            <td class="text-center">{{ i + 1 }}</td>
             <td>{{ agenda.titulo }}</td>
             <td>{{ agenda.descricao }}</td>
             <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ agenda.dataFim | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-              {{ getSituacaoLabel(agenda.enumSituacao) }}
+            <td class="text-center" [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+              <span class="badge bg-warning text-dark">
+                {{ getSituacaoLabel(agenda.enumSituacao) }}
+              </span>
             </td>
           </tr>
         </tbody>
