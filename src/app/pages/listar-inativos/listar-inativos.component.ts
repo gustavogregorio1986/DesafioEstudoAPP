@@ -31,7 +31,7 @@ export class ListarInativosComponent {
     
       carregarAgendas(): void {
         this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
-          const ativos = agendas.filter(a => a.enumSituacao === this.Situacao.Ativo);
+          const ativos = agendas.filter(a => a.enumSituacao === this.Situacao.Inativo);
     
           ativos.forEach(agenda => {
             agenda.Ano = new Date(agenda.dataFim).getFullYear().toString();

@@ -12,5 +12,5 @@ export const routes: Routes = [
     {path: 'consulta', component: ConsultarComponent},
     {path: 'listar-ativos', component: ListarAtivosComponent},
     {path: 'listar-inativos', component: ListarInativosComponent},
-    {path: 'listar-pedenetes', component: ListarPendentesComponent},
+    {path: 'listar-pedentes', component: ListarPendentesComponent},
 ];
