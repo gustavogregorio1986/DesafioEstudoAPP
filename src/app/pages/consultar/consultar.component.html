@@ -1,12 +1,14 @@
 <div class="container-fluid py-5 px-4 bg-light rounded-4 shadow-lg">
   <!-- WhatsApp -->
-  <div class="mb-4">
-    <a href="https://wa.me/5521996972628" target="_blank" class="btn btn-success btn-lg d-flex align-items-center gap-2">
+  <div class="mb-4 text-center">
+    <a href="https://wa.me/5521996972628" target="_blank"
+       class="btn btn-success btn-lg d-inline-flex align-items-center gap-2"
+       aria-label="Abrir conversa no WhatsApp com Gustavo Gregorio">
       <i class="bi bi-whatsapp fs-4"></i> <span>Fale pelo WhatsApp</span>
     </a>
   </div>
 
-  <!-- Busca -->
+  <!-- Busca por texto -->
   <div class="card p-4 mb-4 border-0 rounded-4 shadow-sm">
     <div class="input-group input-group-lg">
       <span class="input-group-text bg-white"><i class="bi bi-search fs-5 text-muted"></i></span>
@@ -18,9 +20,9 @@
     </div>
   </div>
 
-  <!-- Total -->
+  <!-- Total de registros -->
   <p class="fw-bold text-primary fs-5 mb-4">
-    Total geral de registros: {{ agendasFiltradas.length }}
+    📊 Total geral de registros: <span class="text-dark">{{ agendasFiltradas.length }}</span>
   </p>
 
   <!-- Filtro por data -->
@@ -46,17 +48,20 @@
   </div>
 
   <!-- Relatórios -->
-  <div class="mb-5 d-flex flex-wrap gap-3">
-    <button class="btn btn-info btn-lg d-flex align-items-center gap-2" (click)="gerarRelatorioGeral()">
-      <i class="bi bi-file-earmark-text"></i> Relatório Geral
-    </button>
+  <div class="mb-5 d-flex flex-wrap gap-3 justify-content-center">
+    
+
     <button class="btn btn-success btn-lg d-flex align-items-center gap-2" (click)="exportarExcel()">
       <i class="bi bi-file-earmark-excel"></i> Exportar Excel
     </button>
+
+    <button class="btn btn-danger btn-lg d-flex align-items-center gap-2" (click)="gerarRelatorioGeral()">
+      <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+    </button>
   </div>
 
-  <!-- Vazio -->
-  <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning fs-5" role="alert">
+  <!-- Alerta de vazio -->
+  <div *ngIf="agendasFiltradas.length === 0" class="alert alert-warning fs-5 text-center" role="alert">
     ⚠️ Nenhum registro encontrado para o intervalo selecionado.
   </div>
 
@@ -81,8 +86,8 @@
     </div>
   </div>
 
-  <!-- Cards resumo -->
-  <div class="row row-cols-auto g-4 mb-5">
+  <!-- Cards resumo por ano -->
+  <div class="row row-cols-auto g-4 mb-5 justify-content-center">
     <div class="col" *ngFor="let grupo of agendasPorAno | keyvalue">
       <div class="card text-center border-0 rounded-4 shadow-sm bg-white">
         <div class="card-body">
@@ -93,7 +98,7 @@
     </div>
   </div>
 
-  <!-- Tabelas -->
+  <!-- Tabelas por ano -->
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div *ngFor="let grupo of agendasPorAno | keyvalue">
@@ -103,7 +108,7 @@
 
         <div class="table-responsive mt-3">
           <table class="table table-bordered table-striped table-hover align-middle">
-            <thead class="table-light">
+            <thead class="table-light text-center">
               <tr>
                 <th>Título</th>
                 <th>Descrição</th>
@@ -119,15 +124,23 @@
                 <td>{{ agenda.descricao }}</td>
                 <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td>{{ agenda.dataFim ? (agenda.dataFim | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
-                <td [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-                  {{ getSituacaoLabel(agenda.enumSituacao) }}
+                <td class="text-center" [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+                  <span class="badge bg-info text-dark">
+                    {{ getSituacaoLabel(agenda.enumSituacao) }}
+                  </span>
                 </td>
-                <td class="text-nowrap">
-                  <button class="btn btn-danger btn-sm me-2" (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null">
+                <td class="text-nowrap text-center">
+                  <button class="btn btn-danger btn-sm me-2"
+                          (click)="agenda.id !== undefined ? excluirAgenda(agenda.id) : null"
+                          data-bs-toggle="tooltip" title="Excluir agenda">
                     🗑️
                   </button>
-                  <button class="btn btn-warning btn-sm" (click)="selecionarAgenda(agenda)" data-bs-toggle="modal" data-bs-target="#modal-editar">
-                    ✏️ Editar
+                  <button class="btn btn-warning btn-sm"
+                          (click)="selecionarAgenda(agenda)"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal-editar"
+                          title="Editar agenda">
+                    ✏️
                   </button>
                 </td>
               </tr>
@@ -144,5 +157,6 @@
     </div>
   </div>
 
+  <!-- Rodapé -->
   <app-footer class="footer-expand mt-5"></app-footer>
 </div>
