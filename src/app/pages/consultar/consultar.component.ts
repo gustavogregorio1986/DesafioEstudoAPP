@@ -45,7 +45,7 @@ export class ConsultarComponent implements OnInit {
     { label: 'Pendente', value: Situacao.Pendente }
   ];
 
-  constructor(private agendaService: AgendaService) {}
+  constructor(private agendaService: AgendaService) { }
 
   ngOnInit(): void {
     this.carregarAgendas();
@@ -102,6 +102,7 @@ export class ConsultarComponent implements OnInit {
     this.atualizarAgrupamento();
     this.totalRegistros = this.agendasFiltradas.length;
   }
+  
 
   filtrarPorData(): void {
     const inicio = this.dataInicioFiltro ? new Date(this.dataInicioFiltro + 'T00:00:00') : null;
@@ -152,14 +153,24 @@ export class ConsultarComponent implements OnInit {
     this.agendaSelecionada = { ...agenda };
   }
 
+  atualizarAgendaLocal(agendaAtualizada: Agenda): void {
+    const index = this.agendasOriginais.findIndex(a => a.id === agendaAtualizada.id);
+    if (index !== -1) {
+      this.agendasOriginais[index] = { ...agendaAtualizada };
+      this.agendasFiltradas = [...this.agendasOriginais];
+      this.atualizarAgrupamento();
+      this.totalRegistros = this.agendasFiltradas.length;
+    }
+  }
+
   editarAgendaSelecionada(): void {
     if (!this.agendaSelecionada?.id) return;
 
     this.agendaService.editarAgenda(this.agendaSelecionada.id, this.agendaSelecionada).subscribe({
       next: () => {
         alert('Agenda atualizada com sucesso!');
-        this.carregarAgendas();
-        this.agendaSelecionada = null;
+        this.atualizarAgendaLocal(this.agendaSelecionada!); // atualiza na tela
+        this.agendaSelecionada = null; // fecha o formulário/modal
       },
       error: err => {
         console.error('Erro ao atualizar agenda:', err);
