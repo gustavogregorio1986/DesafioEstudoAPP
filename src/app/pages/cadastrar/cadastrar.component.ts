@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AgendaService } from '../../servicos/agenda.service';
 import { Agenda } from '../../classes/agenda';
 import { Situacao } from '../../classes/Situacao';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FooterComponent } from '../footer/footer.component';
 import { CommonModule } from '@angular/common';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-cadastrar',
@@ -13,7 +14,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './cadastrar.component.html',
   styleUrl: './cadastrar.component.css'
 })
-export class CadastrarComponent {
+export class CadastrarComponent implements OnInit{
 
   titulo = '';
   dataInicio!: string; // formato yyyy-MM-dd
@@ -22,6 +23,10 @@ export class CadastrarComponent {
   dataFim!: string;        // formato yyyy-MM-dd
   descricao = '';
   enumSituacao: Situacao | null = null;
+  mesAtual: Date = new Date();
+  agendasFiltradas: any[] = [];
+
+
 
   diaInteiroSelecionado: boolean = false;
 
@@ -35,6 +40,10 @@ export class CadastrarComponent {
   ];
 
   constructor(private agendaService: AgendaService) { }
+
+  ngOnInit() {
+     this.gerarAgendasPeriodo(8, 17); // Horário fixo das 08:00 às 17:00
+  }
 
   salvar(form: NgForm) {
     if (!this.titulo || !this.dataInicio || !this.descricao || !this.enumSituacao) {
@@ -92,6 +101,29 @@ export class CadastrarComponent {
       }
     });
   }
+
+  gerarAgendasPeriodo(horaInicio: number, horaFim: number) {
+  const inicio = new Date(2025, 9, 7); // Outubro (mês 9)
+  const fim = new Date(2025, 10, 7);   // Novembro (mês 10)
+
+  const novasAgendas = [];
+
+  for (let data = new Date(inicio); data <= fim; data.setDate(data.getDate() + 1)) {
+    const dataInicio = new Date(data.getFullYear(), data.getMonth(), data.getDate(), horaInicio, 0);
+    const dataFim = new Date(data.getFullYear(), data.getMonth(), data.getDate(), horaFim, 0);
+
+    novasAgendas.push({
+      id: `${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()}`,
+      titulo: `Agenda ${data.toLocaleDateString('pt-BR')}`,
+      descricao: `Horário fixo das ${horaInicio}:00 às ${horaFim}:00`,
+      dataInicio: dataInicio,
+      dataFim: dataFim,
+      enumSituacao: 'ativo'
+    });
+  }
+
+  this.agendasFiltradas = novasAgendas;
+}
 
   limparFormulario() {
     this.titulo = '';
