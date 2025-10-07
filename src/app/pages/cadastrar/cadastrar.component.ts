@@ -57,8 +57,8 @@ export class CadastrarComponent implements OnInit {
 
     if (this.diaInteiroSelecionado || !this.dataFim) {
       // Assume dia inteiro com base na data de início
-      inicio = new Date(`${this.dataInicio}T00:00:00`);
-      fim = new Date(`${this.dataInicio}T23:59:59`);
+      inicio = new Date(`${this.dataInicio}T08:00:00`);
+      fim = new Date(`${this.dataInicio}T17:00:00`);
     } else {
       // Usa os campos manuais
       const dataInicioStr = `${this.dataInicio}T${this.horaInicio || '00:00'}:00`;
