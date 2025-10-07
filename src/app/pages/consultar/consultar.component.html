@@ -136,6 +136,15 @@
                           title="Editar agenda">
                     ✏️
                   </button>
+                  <button class="btn btn-info btn-sm"
+                         (click)="abrirTrocaSituacao(agenda)"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-situacao"
+                        title="Trocar situação">
+                  🔄
+                  </button>
+
+
                 </td>
               </tr>
             </tbody>
@@ -188,7 +197,7 @@
                  <option value="ativo">Ativo</option>
                  <option value="inativo">Inativo</option>
                  <option value="pendente">Pendente</option>
-           </select>
+               </select>
           </div>
 
           <div class="text-end">
@@ -197,6 +206,40 @@
           </div>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal-situacao" tabindex="-1" aria-labelledby="modalSituacaoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Cabeçalho do modal -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalSituacaoLabel">Trocar Situação</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <!-- Corpo do modal: só aparece se agendaSelecionada estiver definida -->
+      <div class="modal-body" *ngIf="agendaSelecionada">
+        <label class="form-label">Nova Situação</label>
+        <select [(ngModel)]="agendaSelecionada.enumSituacao" class="form-select">
+  <option *ngFor="let s of situacoes" [value]="s.value">{{ s.label }}</option>
+</select>
+      </div>
+
+      <!-- Rodapé do modal -->
+      <div class="modal-footer">
+        <button class="btn btn-primary"
+                *ngIf="agendaSelecionada"
+                (click)="atualizarSituacao(agendaSelecionada)"
+                data-bs-dismiss="modal">
+          Salvar
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

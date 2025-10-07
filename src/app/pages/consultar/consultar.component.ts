@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule, DatePipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Agenda } from '../../classes/agenda';
+import { Situacao } from '../../classes/Situacao';
 import { AgendaService } from '../../servicos/agenda.service';
 import { FooterComponent } from '../footer/footer.component';
-import { CommonModule, DatePipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
-import { Situacao } from '../../classes/Situacao';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-consultar',
@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
     NgIf
   ],
   templateUrl: './consultar.component.html',
-  styleUrl: './consultar.component.css'
+  styleUrls: ['./consultar.component.css']
 })
 export class ConsultarComponent implements OnInit {
 
@@ -61,29 +61,42 @@ export class ConsultarComponent implements OnInit {
   }
 
   atualizarAgrupamento(): void {
-    if (this.modoAgrupamento === 'mes') {
-      this.agruparPorMes();
-    } else {
-      this.agruparPorAno();
-    }
+    this.modoAgrupamento === 'mes' ? this.agruparPorMes() : this.agruparPorAno();
   }
 
   private agruparPorAno(): void {
     this.agendasPorAno = {};
     this.agendasFiltradas.forEach(agenda => {
-      const ano = new Date(agenda.dataInicio).getFullYear().toString();
-      if (!this.agendasPorAno[ano]) this.agendasPorAno[ano] = [];
+      if (!agenda.dataInicio) return;
+      const data = new Date(agenda.dataInicio);
+      const ano = isNaN(data.getTime()) ? 'Data inválida' : data.getFullYear().toString();
+      this.agendasPorAno[ano] ||= [];
       this.agendasPorAno[ano].push(agenda);
     });
     this.grupos = this.converterParaGrupos(this.agendasPorAno);
   }
 
+  scrollParaTopo(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  scrollParaAno(ano: string): void {
+    const elemento = document.getElementById('ano-' + ano);
+    if (elemento) {
+      elemento.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      console.warn('Elemento não encontrado para ano:', ano);
+    }
+  }
+
   private agruparPorMes(): void {
     this.agendasPorMes = {};
     this.agendasFiltradas.forEach(agenda => {
+      if (!agenda.dataInicio) return;
       const data = new Date(agenda.dataInicio);
+      if (isNaN(data.getTime())) return;
       const mes = `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}`;
-      if (!this.agendasPorMes[mes]) this.agendasPorMes[mes] = [];
+      this.agendasPorMes[mes] ||= [];
       this.agendasPorMes[mes].push(agenda);
     });
     this.grupos = this.converterParaGrupos(this.agendasPorMes);
@@ -102,7 +115,6 @@ export class ConsultarComponent implements OnInit {
     this.atualizarAgrupamento();
     this.totalRegistros = this.agendasFiltradas.length;
   }
-  
 
   filtrarPorData(): void {
     const inicio = this.dataInicioFiltro ? new Date(this.dataInicioFiltro + 'T00:00:00') : null;
@@ -153,6 +165,19 @@ export class ConsultarComponent implements OnInit {
     this.agendaSelecionada = { ...agenda };
   }
 
+  abrirTrocaSituacao(agenda: Agenda): void {
+    this.agendaSelecionada = {
+      id: agenda.id,
+      dataInicio: agenda.dataInicio,
+      dataFim: agenda.dataFim,
+      enumSituacao: agenda.enumSituacao,
+      Ano: agenda.Ano,
+      titulo: agenda.titulo,
+      descricao: agenda.descricao
+    };
+  }
+
+
   atualizarAgendaLocal(agendaAtualizada: Agenda): void {
     const index = this.agendasOriginais.findIndex(a => a.id === agendaAtualizada.id);
     if (index !== -1) {
@@ -163,14 +188,40 @@ export class ConsultarComponent implements OnInit {
     }
   }
 
+  atualizarSituacao(agenda: Agenda): void {
+    if (!agenda?.id) {
+      console.warn('Agenda inválida: ID ausente ou incorreto');
+      return;
+    }
+
+
+
+    if (!agenda.enumSituacao) {
+      console.error('Situação inválida ou não definida');
+      return;
+    }
+
+    this.agendaService.atualizarSituacao(String(agenda.id), agenda.enumSituacao).subscribe({
+      next: () => {
+        console.log('Situação atualizada com sucesso');
+        this.atualizarAgendaLocal(agenda);
+      },
+      error: err => {
+        console.error('Erro ao atualizar situação:', err);
+      }
+    });
+
+
+  }
+
   editarAgendaSelecionada(): void {
     if (!this.agendaSelecionada?.id) return;
 
     this.agendaService.editarAgenda(this.agendaSelecionada.id, this.agendaSelecionada).subscribe({
       next: () => {
         alert('Agenda atualizada com sucesso!');
-        this.atualizarAgendaLocal(this.agendaSelecionada!); // atualiza na tela
-        this.agendaSelecionada = null; // fecha o formulário/modal
+        this.atualizarAgendaLocal(this.agendaSelecionada!);
+        this.agendaSelecionada = null;
       },
       error: err => {
         console.error('Erro ao atualizar agenda:', err);
@@ -183,7 +234,9 @@ export class ConsultarComponent implements OnInit {
     if (confirm('Deseja realmente excluir esta agenda?')) {
       this.agendaService.deletarAgenda(id).subscribe({
         next: () => this.carregarAgendas(),
-        error: err => console.error('Erro ao excluir agenda:', err)
+        error: err => {
+          console.error('Erro ao excluir agenda:', err);
+        }
       });
     }
   }
@@ -217,26 +270,28 @@ export class ConsultarComponent implements OnInit {
     window.URL.revokeObjectURL(url);
   }
 
-  scrollParaAno(ano: string): void {
-    const el = document.getElementById('ano-' + ano);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  scrollParaTopo(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  getSituacaoLabel(valor: number): string {
-    return Situacao[valor] ?? 'Desconhecida';
-  }
-
-  getClassePorEnum(valor: number): string {
+  getSituacaoLabel(valor: string): string {
     const map: { [key: string]: string } = {
-      Ativo: 'text-success',
-      Inativo: 'text-danger',
-      Pendente: 'text-primary'
+      'ativo': 'Ativo',
+      'Pendente': 'Pendente',
+      'Inativo': 'Inativo',
+      'Concluido': 'Concluído',
+      'Cancelado': 'Cancelado',
+      'EmAndamento': 'Em andamento'
     };
-    return map[Situacao[valor]] ?? '';
+    return map[valor] ?? 'Desconhecida';
+  }
+
+  getClassePorEnum(valor: string): string {
+    const map: { [key: string]: string } = {
+      'ativo': 'text-success',
+      'Pendente': 'text-primary',
+      'Inativo': 'text-danger',
+      'Concluido': 'text-info',
+      'Cancelado': 'text-warning',
+      'EmAndamento': 'text-secondary'
+    };
+    return map[valor] ?? '';
   }
 
   getLinhasPorAno(ano: string): number {

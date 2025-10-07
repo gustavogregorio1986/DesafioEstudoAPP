@@ -1,4 +1,5 @@
 <div class="container py-5">
+
   <!-- Total de registros -->
   <p class="fw-bold text-success fs-5 mb-4">
     ✅ Total geral de registros ativos: {{ totalRegistros }}
@@ -13,10 +14,11 @@
     </a>
   </div>
 
-  <!-- Listagem agrupada -->
+  <!-- Listagem agrupada por ano -->
   <div *ngFor="let grupo of grupos" class="mb-5">
     <h2 class="text-primary fw-semibold fs-4 mb-3 border-bottom pb-2">
-      {{ grupo.key }} <span class="badge bg-secondary">{{ grupo.value.length }} ativos</span>
+      {{ grupo.key }}
+      <span class="badge bg-secondary">{{ grupo.value.length }} ativos</span>
     </h2>
 
     <div class="table-responsive shadow-sm rounded-3">
@@ -38,8 +40,9 @@
             <td>{{ agenda.descricao }}</td>
             <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ agenda.dataFim | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td class="text-center" [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-              <span class="badge bg-info text-dark">
+            <td class="text-center">
+              <span class="badge px-3 py-2 rounded-pill"
+                    [ngClass]="getClassePorEnum(agenda.enumSituacao)">
                 {{ getSituacaoLabel(agenda.enumSituacao) }}
               </span>
             </td>
@@ -51,4 +54,5 @@
 
   <!-- Rodapé -->
   <app-footer class="footer-expand mt-5"></app-footer>
+
 </div>

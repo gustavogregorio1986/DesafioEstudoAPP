@@ -44,4 +44,10 @@ export class AgendaService {
       responseType: 'blob'
     });
   }
+
+  atualizarSituacao(id: string, novaSituacao: string) {
+    return this.http.put(`${this.apiUrl}/${id}/situacao`, { situacao: novaSituacao }, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 }

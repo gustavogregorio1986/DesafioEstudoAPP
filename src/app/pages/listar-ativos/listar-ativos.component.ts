@@ -23,8 +23,6 @@ export class ListarAtivosComponent implements OnInit {
   grupos: { key: string; value: Agenda[] }[] = [];
   totalRegistros: number = 0;
 
-  Situacao = Situacao;
-
   constructor(private agendaService: AgendaService) {}
 
   ngOnInit(): void {
@@ -46,7 +44,7 @@ export class ListarAtivosComponent implements OnInit {
   }
 
   private filtrarAtivos(agendas: Agenda[]): Agenda[] {
-    return agendas.filter(a => a.enumSituacao === this.Situacao.Ativo);
+    return agendas.filter(a => a.enumSituacao?.toLowerCase() === 'ativo');
   }
 
   private extrairAno(agenda: Agenda): string {
@@ -73,16 +71,21 @@ export class ListarAtivosComponent implements OnInit {
     }));
   }
 
-  getSituacaoLabel(valor: number): string {
-    return Situacao[valor] ?? 'Desconhecida';
+  getSituacaoLabel(valor: string): string {
+    const map: { [key: string]: string } = {
+      'ativo': 'Ativo',
+      'pendente': 'Pendente',
+      'inativo': 'Inativo'
+    };
+    return map[valor.toLowerCase()] ?? 'Desconhecida';
   }
 
-  getClassePorEnum(valor: number): string {
+  getClassePorEnum(valor: string): string {
     const map: { [key: string]: string } = {
-      Ativo: 'text-success',
-      Inativo: 'text-danger',
-      Pendente: 'text-primary'
+      'ativo': 'text-success',
+      'pendente': 'text-primary',
+      'inativo': 'text-danger'
     };
-    return map[Situacao[valor]] ?? '';
+    return map[valor.toLowerCase()] ?? '';
   }
 }
