@@ -5,6 +5,7 @@ import { ConsultarComponent } from './pages/consultar/consultar.component';
 import { ListarAtivosComponent } from './pages/listar-ativos/listar-ativos.component';
 import { ListarInativosComponent } from './pages/listar-inativos/listar-inativos.component';
 import { ListarPendentesComponent } from './pages/listar-pendentes/listar-pendentes.component';
+import { SemanalComponent } from './pages/semanal/semanal.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -13,4 +14,5 @@ export const routes: Routes = [
     {path: 'listar-ativos', component: ListarAtivosComponent},
     {path: 'listar-inativos', component: ListarInativosComponent},
     {path: 'listar-pedentes', component: ListarPendentesComponent},
+    {path: 'semanal', component: SemanalComponent},
 ];

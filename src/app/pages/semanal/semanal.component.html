@@ -1,0 +1,42 @@
+<div class="container py-5">
+  <h2 class="mb-4 text-center text-muted">📅 Visualização Semanal</h2>
+
+  <div *ngFor="let grupo of gruposSemanais" class="mb-5">
+    <h4 class="text-primary border-bottom pb-2">{{ grupo.key }} ({{ grupo.value.length }} registros)</h4>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light text-center">
+          <tr>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Início</th>
+            <th>Fim</th>
+            <th>Situação</th>
+            <th>Turno</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let agenda of grupo.value">
+            <td>{{ agenda.titulo }}</td>
+            <td>{{ agenda.descricao }}</td>
+            <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ agenda.dataFim | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="text-center">
+              <span class="badge px-3 py-2 rounded-pill"
+                    [ngClass]="getClassePorEnum(agenda.enumSituacao)">
+                {{ getSituacaoLabel(agenda.enumSituacao) }}
+              </span>
+            </td>
+            <td class="text-center">
+               <span class="badge px-3 py-2 rounded-pill"
+                  [ngClass]="getClassesPorTurno(agenda.turno)">
+                   {{ getTurnoLabel(agenda.turno) }}
+              </span>
+           </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

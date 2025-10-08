@@ -22,6 +22,7 @@ export class CadastrarComponent implements OnInit {
   horaFim: string = '';    // exemplo: '16:00'
   dataFim!: string;        // formato yyyy-MM-dd
   descricao = '';
+  turno = '';
   enumSituacao: Situacao | null = null;
   mesAtual: Date = new Date();
   agendasFiltradas: any[] = [];
@@ -80,12 +81,13 @@ export class CadastrarComponent implements OnInit {
     }
 
     const novaAgenda = new Agenda(
-      this.titulo,
-      inicio,
-      fim,
-      this.descricao,
-      this.enumSituacao
-    );
+  this.titulo,
+  new Date(this.dataInicio),
+  new Date(this.dataFim),
+  this.descricao,
+  this.turno,
+  this.enumSituacao
+);
 
     this.agendaService.adicionarAgenda(novaAgenda).subscribe({
       next: res => {

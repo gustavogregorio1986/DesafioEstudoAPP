@@ -8,12 +8,14 @@ export class Agenda {
   descricao: string;
   enumSituacao: Situacao;
   Ano?: string;
+  turno: string;
 
   constructor(
     titulo: string,
     dataInicio: Date,
     dataFim: Date,
     descricao: string,
+     turno: string,
     enumSituacao: Situacao,
     id?: number
   ) {
@@ -22,6 +24,7 @@ export class Agenda {
     this.dataFim = dataFim;
     this.descricao = descricao;
     this.enumSituacao = enumSituacao;
+    this.turno = turno;
     if (id !== undefined) {
       this.id = id;
     }

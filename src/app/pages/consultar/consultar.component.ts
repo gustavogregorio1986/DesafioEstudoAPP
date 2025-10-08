@@ -173,7 +173,8 @@ export class ConsultarComponent implements OnInit {
       enumSituacao: agenda.enumSituacao,
       Ano: agenda.Ano,
       titulo: agenda.titulo,
-      descricao: agenda.descricao
+      descricao: agenda.descricao,
+      turno: agenda.turno
     };
   }
 
