@@ -15,7 +15,7 @@ export class SemanalComponent implements OnInit {
 
   agendas: Agenda[] = [];
   gruposSemanais: { key: string; value: Agenda[] }[] = [];
-   turno?: string;
+  turno?: string;
 
   constructor(private agendaService: AgendaService) {
     this.turno = '';
@@ -53,63 +53,62 @@ export class SemanalComponent implements OnInit {
   }
 
   getSituacaoLabel(valor: string | undefined | null): string {
-  if (typeof valor !== 'string') {
-    return 'Desconhecida';
+    if (typeof valor !== 'string') {
+      return 'Desconhecida';
+    }
+
+    const chave = valor.toLowerCase();
+    const map: { [key: string]: string } = {
+      'ativo': 'Ativo',
+      'inativo': 'Inativo',
+      'pendente': 'Pendente'
+    };
+
+    return map[chave] ?? 'Desconhecida';
   }
-
-  const chave = valor.toLowerCase();
-  const map: { [key: string]: string } = {
-    'ativo': 'Ativo',
-    'inativo': 'Inativo',
-    'pendente': 'Pendente'
-  };
-
-  return map[chave] ?? 'Desconhecida';
-}
 
   getClassePorEnum(valor: string | undefined | null): string {
-  if (typeof valor !== 'string') {
-    return 'bg-light text-dark';
+    if (typeof valor !== 'string') {
+      return 'bg-light text-dark';
+    }
+
+    const chave = valor.toLowerCase();
+    const map: { [key: string]: string } = {
+      'ativo': 'bg-success text-white',
+      'inativo': 'bg-danger text-white',
+      'pendente': 'bg-primary text-white'
+    };
+
+    return map[chave] ?? 'bg-light text-dark';
   }
-
-  const chave = valor.toLowerCase();
-  const map: { [key: string]: string } = {
-    'ativo': 'bg-success text-white',
-    'inativo': 'bg-danger text-white',
-    'pendente': 'bg-primary text-white'
-  };
-
-  return map[chave] ?? 'bg-light text-dark';
-}
 
   getTurnoLabel(valor: string | undefined | null): string {
-  if (typeof valor !== 'string') {
-    return '❔ Indefinido';
+    if (typeof valor !== 'string') {
+      return '❔ Indefinido';
+    }
+
+    const chave = valor.toLowerCase();
+    const map: { [key: string]: string } = {
+      'manha': '🌅 Manhã',
+      'tarde': '🌇 Tarde',
+      'noite': '🌙 Noite'
+    };
+
+    return map[chave] ?? '❔ Indefinido';
   }
 
-  const chave = valor.toLowerCase();
-  const map: { [key: string]: string } = {
-    'manha': '🌅 Manhã',
-    'tarde': '🌇 Tarde',
-    'noite': '🌙 Noite'
-  };
+  getClassesPorTurno(valor: string | undefined | null): string {
+    if (typeof valor !== 'string') {
+      return 'bg-light text-dark';
+    }
 
-  return map[chave] ?? '❔ Indefinido';
-}
+    const chave = valor.toLowerCase();
+    const map: { [key: string]: string } = {
+      'manha': 'bg-warning text-dark',
+      'tarde': 'bg-primary text-white',
+      'noite': 'bg-dark text-white'
+    };
 
-getClassesPorTurno(valor: string | undefined | null): string {
-  if (typeof valor !== 'string') {
-    return 'bg-light text-dark';
+    return map[chave] ?? 'bg-light text-dark';
   }
-
-  const chave = valor.toLowerCase();
-  const map: { [key: string]: string } = {
-    'manha': 'bg-warning text-dark',
-    'tarde': 'bg-primary text-white',
-    'noite': 'bg-dark text-white'
-  };
-
-  return map[chave] ?? 'bg-light text-dark';
-}
-  
 }
