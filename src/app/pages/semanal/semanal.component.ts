@@ -5,9 +5,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-semanal',
-  imports: [
-    CommonModule // <- Adicione isso aqui
-  ],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './semanal.component.html',
   styleUrls: ['./semanal.component.css']
 })
@@ -15,11 +14,8 @@ export class SemanalComponent implements OnInit {
 
   agendas: Agenda[] = [];
   gruposSemanais: { key: string; value: Agenda[] }[] = [];
-  turno?: string;
 
-  constructor(private agendaService: AgendaService) {
-    this.turno = '';
-  }
+  constructor(private agendaService: AgendaService) {}
 
   ngOnInit(): void {
     this.agendaService.listarAgenda().subscribe((agendas: Agenda[]) => {
@@ -43,7 +39,10 @@ export class SemanalComponent implements OnInit {
       agrupado[chave].push(agenda);
     });
 
-    this.gruposSemanais = Object.entries(agrupado).map(([key, value]) => ({ key, value }));
+    this.gruposSemanais = Object.entries(agrupado).map(([key, value]) => ({
+      key,
+      value: value as Agenda[]
+    }));
   }
 
   private getNumeroSemana(data: Date): number {
