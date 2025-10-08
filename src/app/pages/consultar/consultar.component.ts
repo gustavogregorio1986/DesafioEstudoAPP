@@ -275,7 +275,7 @@ export class ConsultarComponent implements OnInit {
 
     switch (valor?.toLowerCase()) {
       case 'ativo':
-        return 'aativom';
+        return 'ativo';
       case 'pendente':
         return 'Pendente';
       case 'inativo':

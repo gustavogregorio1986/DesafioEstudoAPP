@@ -41,10 +41,9 @@
             <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ agenda.dataFim | date:'dd/MM/yyyy HH:mm' }}</td>
             <td class="text-center">
-              <span class="badge px-3 py-2 rounded-pill"
-                    [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-                {{ getSituacaoLabel(agenda.enumSituacao) }}
-              </span>
+                <span class="badge bg-primary text-white px-3 py-2 rounded-pill">
+                  {{ getSituacaoLabel(agenda.enumSituacao) }}
+               </span>
             </td>
           </tr>
         </tbody>
