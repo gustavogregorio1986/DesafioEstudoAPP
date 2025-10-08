@@ -273,15 +273,18 @@ export class ConsultarComponent implements OnInit {
   getSituacaoLabel(valor: string): string {
     const situacao = valor?.toLowerCase();
 
-    if (situacao === 'ativo') {
-      return 'ativo'; // ou 'Ativo', se quiser manter
-    } else if (situacao === 'pendente') {
-      return 'Pendente';
-    } else if (situacao === 'inativo') {
-      return 'Inativo';
-    } else {
-      return '';
+    switch (valor?.toLowerCase()) {
+      case 'ativo':
+        return 'aativom';
+      case 'pendente':
+        return 'Pendente';
+      case 'inativo':
+        return 'Inativo';
+      default:
+        return '';
     }
+
+
   }
 
   getClassePorEnum(valor: string): string {
