@@ -38,11 +38,11 @@
             <td>{{ agenda.descricao }}</td>
             <td>{{ agenda.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ agenda.dataFim | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td class="text-center" [ngClass]="getClassePorEnum(agenda.enumSituacao)">
-              <span class="badge bg-warning text-dark">
-                {{ getSituacaoLabel(agenda.enumSituacao) }}
-              </span>
-            </td>
+            <td class="text-center">
+            <span class="badge bg-danger text-white px-3 py-2 rounded-pill">
+               {{ getSituacaoLabel(agenda.enumSituacao) }}
+            </span>
+          </td>
           </tr>
         </tbody>
       </table>
