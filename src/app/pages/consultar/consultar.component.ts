@@ -271,25 +271,24 @@ export class ConsultarComponent implements OnInit {
   }
 
   getSituacaoLabel(valor: string): string {
-    const map: { [key: string]: string } = {
-      'ativo': 'Ativo',
-      'Pendente': 'Pendente',
-      'Inativo': 'Inativo',
-      'Concluido': 'Concluído',
-      'Cancelado': 'Cancelado',
-      'EmAndamento': 'Em andamento'
-    };
-    return map[valor] ?? 'Desconhecida';
+    const situacao = valor?.toLowerCase();
+
+    if (situacao === 'ativo') {
+      return 'ativo'; // ou 'Ativo', se quiser manter
+    } else if (situacao === 'pendente') {
+      return 'Pendente';
+    } else if (situacao === 'inativo') {
+      return 'Inativo';
+    } else {
+      return '';
+    }
   }
 
   getClassePorEnum(valor: string): string {
     const map: { [key: string]: string } = {
       'ativo': 'text-success',
       'Pendente': 'text-primary',
-      'Inativo': 'text-danger',
-      'Concluido': 'text-info',
-      'Cancelado': 'text-warning',
-      'EmAndamento': 'text-secondary'
+      'Inativo': 'text-danger'
     };
     return map[valor] ?? '';
   }
